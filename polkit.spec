@@ -5,7 +5,7 @@
 Summary: PolicyKit Authorization Framework
 Name: polkit
 Version: 0.93
-Release: %mkrel 1
+Release: %mkrel 2
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
@@ -49,7 +49,8 @@ Development files for PolicyKit.
 %setup -q
 
 %build
-%configure2_5x --enable-gtk-doc --disable-static
+%configure2_5x --enable-gtk-doc --disable-static --libexecdir=%{_libexecdir}/polkit-1
+
 make
 
 %install
@@ -86,12 +87,12 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/polkit-1
 %{_bindir}/pkaction
 %{_bindir}/pkcheck
-%_libexecdir/polkitd
+%_libexecdir/polkit-1/polkitd
 
 # see upstream docs for why these permissions are necessary
 %attr(0700,root,root) %dir %{_localstatedir}/lib/polkit-1/
 %attr(4755,root,root) %{_bindir}/pkexec
-%attr(4755,root,root) %{_libexecdir}/polkit-agent-helper-1
+%attr(4755,root,root) %{_libexecdir}/polkit-1/polkit-agent-helper-1
 
 %files -n %develname
 %defattr(-,root,root,-)

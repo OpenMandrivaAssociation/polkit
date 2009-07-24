@@ -4,8 +4,8 @@
 %define develname %mklibname -d %name %api
 Summary: PolicyKit Authorization Framework
 Name: polkit
-Version: 0.92
-Release: %mkrel 2
+Version: 0.93
+Release: %mkrel 1
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
@@ -74,8 +74,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_datadir}/man/man1/pkexec.1*
 %{_datadir}/man/man1/pkaction.1*
 %{_datadir}/man/man1/pkcheck.1*
-%{_datadir}/man/man8/polkitd-1.8*
-%{_datadir}/man/man8/PolicyKit-1.8*
+%_mandir/man8/pklocalauthority.8*
+%_mandir/man8/polkit.8*
+%_mandir/man8/polkitd.8*
 %{_datadir}/dbus-1/system-services/*
 %dir %{_datadir}/polkit-1/
 %dir %{_datadir}/polkit-1/actions
@@ -85,7 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/polkit-1
 %{_bindir}/pkaction
 %{_bindir}/pkcheck
-%{_libexecdir}/polkitd-1
+%_libexecdir/polkitd
 
 # see upstream docs for why these permissions are necessary
 %attr(0700,root,root) %dir %{_localstatedir}/lib/polkit-1/

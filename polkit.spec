@@ -4,8 +4,8 @@
 %define develname %mklibname -d %name %api
 Summary: PolicyKit Authorization Framework
 Name: polkit
-Version: 0.93
-Release: %mkrel 2
+Version: 0.94
+Release: %mkrel 1
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
@@ -16,6 +16,7 @@ BuildRequires: pam-devel
 BuildRequires: eggdbus-devel
 BuildRequires: gtk-doc
 BuildRequires: intltool
+BuildRequires: libgirepository-devel
 Requires: consolekit
 
 %description
@@ -59,6 +60,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %find_lang polkit-1
 
+# remove unpackaged files
+rm -f $RPM_BUILD_ROOT%{_libdir}/polkit-1/extensions/*.la
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -71,13 +75,8 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_libdir}/polkit-1
 %dir %{_libdir}/polkit-1/extensions
 %{_libdir}/polkit-1/extensions/*.so
-%{_libdir}/polkit-1/extensions/*.la
-%{_datadir}/man/man1/pkexec.1*
-%{_datadir}/man/man1/pkaction.1*
-%{_datadir}/man/man1/pkcheck.1*
-%_mandir/man8/pklocalauthority.8*
-%_mandir/man8/polkit.8*
-%_mandir/man8/polkitd.8*
+%{_mandir}/man1/*
+%{_mandir}/man8/*
 %{_datadir}/dbus-1/system-services/*
 %dir %{_datadir}/polkit-1/
 %dir %{_datadir}/polkit-1/actions
@@ -87,18 +86,28 @@ rm -rf $RPM_BUILD_ROOT
 %{_sysconfdir}/polkit-1
 %{_bindir}/pkaction
 %{_bindir}/pkcheck
-%_libexecdir/polkit-1/polkitd
+%{_libexecdir}/polkit-1/polkitd
+%{_libdir}/girepository-1.0/*.typelib
 
 # see upstream docs for why these permissions are necessary
-%attr(0700,root,root) %dir %{_localstatedir}/lib/polkit-1/
+%attr(0700,root,root) %dir %{_var}/lib/polkit-1/
 %attr(4755,root,root) %{_bindir}/pkexec
 %attr(4755,root,root) %{_libexecdir}/polkit-1/polkit-agent-helper-1
+
+%attr(0700,root,root) %dir %{_localstatedir}/lib/polkit-1/
+%dir %{_localstatedir}/lib/polkit-1/localauthority
+%dir %{_localstatedir}/lib/polkit-1/localauthority/10-vendor.d
+%dir %{_localstatedir}/lib/polkit-1/localauthority/20-org.d
+%dir %{_localstatedir}/lib/polkit-1/localauthority/30-site.d
+%dir %{_localstatedir}/lib/polkit-1/localauthority/50-local.d
+%dir %{_localstatedir}/lib/polkit-1/localauthority/90-mandatory.d
 
 %files -n %develname
 %defattr(-,root,root,-)
 %{_libdir}/lib*.so
 %{_libdir}/lib*.la
 %{_libdir}/pkgconfig/*.pc
+%{_datadir}/gir-1.0/*.gir
 %{_includedir}/*
 %{_bindir}/pk-example-frobnicate
 %{_datadir}/polkit-1/actions/org.freedesktop.policykit.examples.pkexec.policy

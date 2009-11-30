@@ -4,7 +4,7 @@
 %define develname %mklibname -d %name %api
 Summary: PolicyKit Authorization Framework
 Name: polkit
-Version: 0.94
+Version: 0.95
 Release: %mkrel 1
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -109,7 +109,5 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*.pc
 %{_datadir}/gir-1.0/*.gir
 %{_includedir}/*
-%{_bindir}/pk-example-frobnicate
-%{_datadir}/polkit-1/actions/org.freedesktop.policykit.examples.pkexec.policy
 %{_datadir}/gtk-doc/html/*
 

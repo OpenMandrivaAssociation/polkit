@@ -5,10 +5,12 @@
 Summary: PolicyKit Authorization Framework
 Name: polkit
 Version: 0.96
-Release: %mkrel 1
+Release: %mkrel 2
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
+# (fc) 0.96-2mdv fix polkit information disclosure (fdo bug #26982) (GIT)
+Patch0: polkit-0.96-fix-info-disclosure.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Group: System/Libraries
 BuildRequires: expat-devel
@@ -48,6 +50,7 @@ Development files for PolicyKit.
 
 %prep
 %setup -q
+%patch0 -p1 -b fix-info-disclosure
 
 %build
 %configure2_5x --enable-gtk-doc --disable-static --libexecdir=%{_libexecdir}/polkit-1

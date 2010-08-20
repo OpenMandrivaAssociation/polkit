@@ -5,10 +5,12 @@
 Summary: PolicyKit Authorization Framework
 Name: polkit
 Version: 0.97
-Release: %mkrel 1
+Release: %mkrel 2
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
+#gw https://qa.mandriva.com/show_bug.cgi?id=60627
+Patch0: polkit-fix-consolekit-interaction-bug.patch
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Group: System/Libraries
 BuildRequires: expat-devel
@@ -48,6 +50,7 @@ Development files for PolicyKit.
 
 %prep
 %setup -q
+%apply_patches
 
 %build
 %configure2_5x --enable-gtk-doc --disable-static --libexecdir=%{_libexecdir}/polkit-1

@@ -4,7 +4,7 @@
 %define develname %mklibname -d %name %api
 Summary: PolicyKit Authorization Framework
 Name: polkit
-Version: 0.98
+Version: 0.99
 Release: %mkrel 1
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit

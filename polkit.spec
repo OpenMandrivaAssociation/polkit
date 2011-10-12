@@ -1,3 +1,5 @@
+%define _with_systemd 1
+
 %define api 1
 %define major 0
 %define libname %mklibname %name %api %major
@@ -5,10 +7,11 @@
 Summary: PolicyKit Authorization Framework
 Name: polkit
 Version: 0.102
-Release: %mkrel 1
+Release: %mkrel 2
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
+Source1: polkitd.service
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Group: System/Libraries
 BuildRequires: expat-devel
@@ -17,6 +20,13 @@ BuildRequires: eggdbus-devel
 BuildRequires: gtk-doc
 BuildRequires: intltool
 BuildRequires: libgirepository-devel
+%if %{_with_systemd}
+BuildRequires: systemd-units
+Requires(post): systemd-units
+Requires(post): systemd-sysvinit
+Requires(preun): systemd-units
+Requires(postun): systemd-units
+%endif
 Requires: consolekit
 
 %description
@@ -53,11 +63,16 @@ Development files for PolicyKit.
 %build
 %configure2_5x --enable-gtk-doc --disable-static --libexecdir=%{_libexecdir}/polkit-1
 
-make
+%make
 
 %install
 rm -rf $RPM_BUILD_ROOT
 %makeinstall_std
+
+%if %{_with_systemd}
+install -m 0644 -D %{SOURCE1} %{buildroot}%{_unitdir}/polkitd.service
+sed -i -e 's#/usr/lib/#%{_libdir}#g' %{buildroot}%{_unitdir}/polkitd.service
+%endif
 
 %find_lang polkit-1
 
@@ -66,6 +81,28 @@ rm -f $RPM_BUILD_ROOT%{_libdir}/polkit-1/extensions/*.la
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%if %{_with_systemd}
+%post
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+[ $1 -ge 1 -o $2 -ge 2 ]; then
+/bin/systemctl enable polkitd.service >/dev/null 2>&1 || :
+/bin/systemctl try-restart polkitd.service >/dev/null 2>&1 || :
+fi
+
+%postun
+/bin/systemctl daemon-reload >/dev/null 2>&1 || :
+if [ $1 -ge 1 ] ; then
+/bin/systemctl try-restart polkitd.service >/dev/null 2>&1 || :
+fi
+
+%preun
+if [ $1 = 0 ]; then
+/bin/systemctl --no-reload dbus.service > /dev/null 2>&1 || :
+/bin/systemctl stop polkitd.service > /dev/null 2>&1 || :
+fi
+
+%endif
 
 %files -n %libname
 %defattr(-,root,root,-)
@@ -104,6 +141,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_localstatedir}/lib/polkit-1/localauthority/30-site.d
 %dir %{_localstatedir}/lib/polkit-1/localauthority/50-local.d
 %dir %{_localstatedir}/lib/polkit-1/localauthority/90-mandatory.d
+%if %{_with_systemd}
+%{_unitdir}/polkitd.service
+%endif
 
 %files -n %develname
 %defattr(-,root,root,-)

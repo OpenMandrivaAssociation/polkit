@@ -21,7 +21,7 @@ BuildRequires: gtk-doc
 BuildRequires: intltool
 BuildRequires: libgirepository-devel
 %if %{_with_systemd}
-BuildRequires: systemd-units
+BuildRequires: systemd-units >= 37
 Requires(post): systemd-units
 Requires(post): systemd-sysvinit
 Requires(preun): systemd-units

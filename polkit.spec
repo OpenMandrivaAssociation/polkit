@@ -7,7 +7,7 @@
 Summary: PolicyKit Authorization Framework
 Name: polkit
 Version: 0.102
-Release: %mkrel 2
+Release: %mkrel 3
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
@@ -98,7 +98,7 @@ fi
 
 %preun
 if [ $1 = 0 ]; then
-/bin/systemctl --no-reload dbus.service > /dev/null 2>&1 || :
+/bin/systemctl --no-reload polkitd.service > /dev/null 2>&1 || :
 /bin/systemctl stop polkitd.service > /dev/null 2>&1 || :
 fi
 

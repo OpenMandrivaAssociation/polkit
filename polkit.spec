@@ -7,7 +7,7 @@
 Summary: PolicyKit Authorization Framework
 Name: polkit
 Version: 0.102
-Release: %mkrel 6
+Release: %mkrel 7
 License: LGPLv2+
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
@@ -85,19 +85,19 @@ rm -rf $RPM_BUILD_ROOT
 %if %{_with_systemd}
 %post
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 -o $2 -ge 2 ]; then
+if [ "$1" -ge "1" -o "$2" -ge "2" ]; then
 /bin/systemctl enable polkitd.service >/dev/null 2>&1 || :
 /bin/systemctl try-restart polkitd.service >/dev/null 2>&1 || :
 fi
 
 %postun
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ $1 -ge 1 ] ; then
+if [ "$1" -ge "1" ] ; then
 /bin/systemctl try-restart polkitd.service >/dev/null 2>&1 || :
 fi
 
 %preun
-if [ $1 = 0 ]; then
+if [ "$1" = "0" ]; then
 /bin/systemctl --no-reload polkitd.service > /dev/null 2>&1 || :
 /bin/systemctl stop polkitd.service > /dev/null 2>&1 || :
 fi
@@ -153,4 +153,3 @@ fi
 %{_datadir}/gir-1.0/*.gir
 %{_includedir}/*
 %{_datadir}/gtk-doc/html/*
-

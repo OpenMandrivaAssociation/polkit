@@ -85,14 +85,14 @@ rm -rf $RPM_BUILD_ROOT
 %if %{_with_systemd}
 %post
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ "$1" -ge "1" -o "$2" -ge "2" ]; then
+if [ "$1" -ge 1 ]; then
 /bin/systemctl enable polkitd.service >/dev/null 2>&1 || :
 /bin/systemctl try-restart polkitd.service >/dev/null 2>&1 || :
 fi
 
 %postun
 /bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ "$1" -ge "1" ] ; then
+if [ "$1" -ge 1 ]; then
 /bin/systemctl try-restart polkitd.service >/dev/null 2>&1 || :
 fi
 

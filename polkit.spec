@@ -2,24 +2,25 @@
 
 %define api 1
 %define major 0
-%define libname %mklibname %name %api %major
-%define develname %mklibname -d %name %api
+%define libname %mklibname %{name} %{api} %major
+%define develname %mklibname -d %{name} %{api}
+
 Summary: PolicyKit Authorization Framework
 Name: polkit
 Version: 0.102
-Release: %mkrel 9
+Release: 10
 License: LGPLv2+
+Group: System/Libraries
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
 Source1: polkitd.service
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
-Group: System/Libraries
-BuildRequires: expat-devel
-BuildRequires: pam-devel
-BuildRequires: eggdbus-devel
+
 BuildRequires: gtk-doc
 BuildRequires: intltool
-BuildRequires: libgirepository-devel
+BuildRequires: expat-devel
+BuildRequires: pam-devel
+BuildRequires: pkgconfig(eggdbus-1)
+BuildRequires: pkgconfig(gobject-introspection-1.0)
 %if %{_with_systemd}
 BuildRequires: systemd-units >= 37
 Requires(post): systemd-units
@@ -34,25 +35,24 @@ PolicyKit is a toolkit for defining and handling authorizations.
 It is used for allowing unprivileged processes to speak to privileged
 processes.
 
-%package -n %libname
+%package -n %{libname}
 Group: System/Libraries
 Summary: PolicyKit Authorization Framework
-Requires: %name >= %version
 
-%description -n %libname
+%description -n %{libname}
 PolicyKit is a toolkit for defining and handling authorizations.
 It is used for allowing unprivileged processes to speak to privileged
 processes.
 
 This package contains the shared libraries of %{name}.
 
-%package -n %develname
+%package -n %{develname}
 Summary: Development files for PolicyKit
 Group: Development/C
-Requires: %libname = %{version}-%{release}
-Provides: polkit-%api-devel = %{version}-%{release}
+Requires: %{libname} = %{version}-%{release}
+Provides: polkit-%{api}-devel = %{version}-%{release}
 
-%description -n %develname
+%description -n %{develname}
 Development files for PolicyKit.
 
 
@@ -61,12 +61,15 @@ Development files for PolicyKit.
 %apply_patches
 
 %build
-%configure2_5x --enable-gtk-doc --disable-static --libexecdir=%{_libexecdir}/polkit-1
+%configure2_5x \
+	--enable-gtk-doc \
+	--disable-static \
+	--libexecdir=%{_libexecdir}/polkit-1
 
 %make
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 %makeinstall_std
 
 %if %{_with_systemd}
@@ -77,10 +80,7 @@ sed -i -e 's#/usr/lib#%{_libdir}#g' %{buildroot}%{_unitdir}/polkitd.service
 %find_lang polkit-1
 
 # remove unpackaged files
-rm -f $RPM_BUILD_ROOT%{_libdir}/polkit-1/extensions/*.la
-
-%clean
-rm -rf $RPM_BUILD_ROOT
+find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 %if %{_with_systemd}
 %post
@@ -101,15 +101,9 @@ if [ "$1" = "0" ]; then
 /bin/systemctl --no-reload polkitd.service > /dev/null 2>&1 || :
 /bin/systemctl stop polkitd.service > /dev/null 2>&1 || :
 fi
-
 %endif
 
-%files -n %libname
-%defattr(-,root,root,-)
-%{_libdir}/lib*-%api.so.%{major}*
-
 %files -f polkit-1.lang
-%defattr(-,root,root,-)
 %dir %{_libdir}/polkit-1
 %dir %{_libdir}/polkit-1/extensions
 %{_libdir}/polkit-1/extensions/*.so
@@ -145,10 +139,11 @@ fi
 %{_unitdir}/polkitd.service
 %endif
 
-%files -n %develname
-%defattr(-,root,root,-)
+%files -n %{libname}
+%{_libdir}/lib*-%{api}.so.%{major}*
+
+%files -n %{develname}
 %{_libdir}/lib*.so
-%{_libdir}/lib*.la
 %{_libdir}/pkgconfig/*.pc
 %{_datadir}/gir-1.0/*.gir
 %{_includedir}/*

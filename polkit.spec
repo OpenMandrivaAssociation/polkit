@@ -1,4 +1,3 @@
-%define _with_systemd 1
 
 %define api 1
 %define major 0
@@ -8,12 +7,11 @@
 Summary: PolicyKit Authorization Framework
 Name: polkit
 Version: 0.104
-Release: 1
+Release: 2
 License: LGPLv2+
 Group: System/Libraries
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
-Source1: polkitd.service
 Patch0: polkit-0.104-fix-linking.patch
 
 BuildRequires: gtk-doc
@@ -22,13 +20,6 @@ BuildRequires: expat-devel
 BuildRequires: pam-devel
 BuildRequires: pkgconfig(eggdbus-1)
 BuildRequires: pkgconfig(gobject-introspection-1.0)
-%if %{_with_systemd}
-BuildRequires: systemd-units >= 37
-Requires(post): systemd-units
-Requires(post): systemd-sysvinit
-Requires(preun): systemd-units
-Requires(postun): systemd-units
-%endif
 Requires: consolekit
 
 %description
@@ -75,36 +66,10 @@ autoreconf -fi
 rm -rf %{buildroot}
 %makeinstall_std
 
-%if %{_with_systemd}
-install -m 0644 -D %{SOURCE1} %{buildroot}%{_unitdir}/polkitd.service
-sed -i -e 's#/usr/lib#%{_libdir}#g' %{buildroot}%{_unitdir}/polkitd.service
-%endif
-
-%find_lang polkit-1
+%find_lang polkit-1 polkit-1.lang
 
 # remove unpackaged files
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
-
-%if %{_with_systemd}
-%post
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ "$1" -ge 1 ]; then
-/bin/systemctl enable polkitd.service >/dev/null 2>&1 || :
-/bin/systemctl try-restart polkitd.service >/dev/null 2>&1 || :
-fi
-
-%postun
-/bin/systemctl daemon-reload >/dev/null 2>&1 || :
-if [ "$1" -ge 1 ]; then
-/bin/systemctl try-restart polkitd.service >/dev/null 2>&1 || :
-fi
-
-%preun
-if [ "$1" = "0" ]; then
-/bin/systemctl --no-reload polkitd.service > /dev/null 2>&1 || :
-/bin/systemctl stop polkitd.service > /dev/null 2>&1 || :
-fi
-%endif
 
 %files -f polkit-1.lang
 %dir %{_libdir}/polkit-1
@@ -138,9 +103,6 @@ fi
 %dir %{_localstatedir}/lib/polkit-1/localauthority/30-site.d
 %dir %{_localstatedir}/lib/polkit-1/localauthority/50-local.d
 %dir %{_localstatedir}/lib/polkit-1/localauthority/90-mandatory.d
-%if %{_with_systemd}
-%{_unitdir}/polkitd.service
-%endif
 
 %files -n %{libname}
 %{_libdir}/lib*-%{api}.so.%{major}*

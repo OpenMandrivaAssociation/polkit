@@ -96,7 +96,6 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %attr(4755,root,root) %{_bindir}/pkexec
 %attr(4755,root,root) %{_libexecdir}/polkit-1/polkit-agent-helper-1
 
-%attr(0700,root,root) %dir %{_localstatedir}/lib/polkit-1/
 %dir %{_localstatedir}/lib/polkit-1/localauthority
 %dir %{_localstatedir}/lib/polkit-1/localauthority/10-vendor.d
 %dir %{_localstatedir}/lib/polkit-1/localauthority/20-org.d

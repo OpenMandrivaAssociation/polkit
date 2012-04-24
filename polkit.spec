@@ -1,13 +1,14 @@
-
 %define api 1
 %define major 0
-%define libname %mklibname %{name} %{api} %major
+%define gir_major 1.0
+%define libname %mklibname %{name} %{api} %{major}
+%define girname %mklibname %{name}-gir %{gir_major}
 %define develname %mklibname -d %{name} %{api}
 
 Summary: PolicyKit Authorization Framework
 Name: polkit
 Version: 0.104
-Release: 2
+Release: 3
 License: LGPLv2+
 Group: System/Libraries
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -32,11 +33,15 @@ Group: System/Libraries
 Summary: PolicyKit Authorization Framework
 
 %description -n %{libname}
-PolicyKit is a toolkit for defining and handling authorizations.
-It is used for allowing unprivileged processes to speak to privileged
-processes.
-
 This package contains the shared libraries of %{name}.
+
+%package -n %{girname}
+Group:		System/Libraries
+Summary:	GObject Introspection interface library for %{name}
+Conflicts:	polkit < 0.104-3
+
+%description -n %{girname}
+GObject Introspection interface library for %{name}.
 
 %package -n %{develname}
 Summary: Development files for PolicyKit
@@ -47,11 +52,9 @@ Provides: polkit-%{api}-devel = %{version}-%{release}
 %description -n %{develname}
 Development files for PolicyKit.
 
-
 %prep
 %setup -q
 %apply_patches
-
 autoreconf -fi
 
 %build
@@ -63,7 +66,6 @@ autoreconf -fi
 %make
 
 %install
-rm -rf %{buildroot}
 %makeinstall_std
 
 %find_lang polkit-1 polkit-1.lang
@@ -72,24 +74,23 @@ rm -rf %{buildroot}
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 %files -f polkit-1.lang
-%dir %{_libdir}/polkit-1
-%dir %{_libdir}/polkit-1/extensions
-%{_libdir}/polkit-1/extensions/*.so
-%{_mandir}/man1/*
-%{_mandir}/man8/*
-%{_datadir}/dbus-1/system-services/*
-%dir %{_datadir}/polkit-1/
-%dir %{_datadir}/polkit-1/actions
-%{_datadir}/polkit-1/actions/org.freedesktop.policykit.policy
-%{_datadir}/polkit-1/actions/org.freedesktop.policykit.examples.pkexec.policy
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
 %{_sysconfdir}/pam.d/polkit-1
 %{_sysconfdir}/polkit-1
 %{_bindir}/pkaction
 %{_bindir}/pkcheck
 %{_bindir}/pk-example-frobnicate
+%dir %{_libdir}/polkit-1
+%dir %{_libdir}/polkit-1/extensions
+%{_libdir}/polkit-1/extensions/*.so
 %{_libexecdir}/polkit-1/polkitd
-%{_libdir}/girepository-1.0/*.typelib
+%{_datadir}/dbus-1/system-services/*
+%dir %{_datadir}/polkit-1/
+%dir %{_datadir}/polkit-1/actions
+%{_datadir}/polkit-1/actions/org.freedesktop.policykit.policy
+%{_datadir}/polkit-1/actions/org.freedesktop.policykit.examples.pkexec.policy
+%{_mandir}/man1/*
+%{_mandir}/man8/*
 
 # see upstream docs for why these permissions are necessary
 %attr(0700,root,root) %dir %{_var}/lib/polkit-1/
@@ -106,9 +107,13 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %files -n %{libname}
 %{_libdir}/lib*-%{api}.so.%{major}*
 
+%files -n %{girname}
+%{_libdir}/girepository-1.0/Polkit*-%{gir_major}.typelib
+
 %files -n %{develname}
+%{_includedir}/*
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*.pc
 %{_datadir}/gir-1.0/*.gir
-%{_includedir}/*
 %{_datadir}/gtk-doc/html/*
+

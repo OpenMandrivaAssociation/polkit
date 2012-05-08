@@ -7,13 +7,12 @@
 
 Summary: PolicyKit Authorization Framework
 Name: polkit
-Version: 0.104
-Release: 5
+Version: 0.105
+Release: 1
 License: LGPLv2+
 Group: System/Libraries
 URL: http://www.freedesktop.org/wiki/Software/PolicyKit
-Source0: http://hal.freedesktop.org/releases/%{name}-%{version}.tar.gz
-Patch0: polkit-0.104-fix-linking.patch
+Source0: http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 
 BuildRequires: gtk-doc
 BuildRequires: intltool
@@ -79,6 +78,7 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_sysconfdir}/polkit-1
 %{_bindir}/pkaction
 %{_bindir}/pkcheck
+%{_bindir}/pkttyagent
 %{_bindir}/pk-example-frobnicate
 %dir %{_libdir}/polkit-1
 %dir %{_libdir}/polkit-1/extensions

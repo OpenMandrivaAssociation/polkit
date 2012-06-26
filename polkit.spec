@@ -7,7 +7,7 @@
 
 Summary: PolicyKit Authorization Framework
 Name: polkit
-Version: 0.105
+Version: 0.106
 Release: 1
 License: LGPLv2+
 Group: System/Libraries
@@ -18,6 +18,7 @@ BuildRequires: gtk-doc
 BuildRequires: intltool
 BuildRequires: expat-devel
 BuildRequires: pam-devel
+BuildRequires: pkgconfig(mozjs185)
 BuildRequires: pkgconfig(eggdbus-1)
 BuildRequires: pkgconfig(gobject-introspection-1.0)
 Requires: consolekit
@@ -60,7 +61,7 @@ autoreconf -fi
 %configure2_5x \
 	--enable-gtk-doc \
 	--disable-static \
-	--libexecdir=%{_libexecdir}/polkit-1
+	--enable-systemd=yes
 
 %make
 
@@ -72,6 +73,9 @@ autoreconf -fi
 # remove unpackaged files
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
+%pre
+%_pre_useradd polkitd /
+
 %files -f polkit-1.lang
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
 %{_sysconfdir}/pam.d/polkit-1
@@ -80,10 +84,9 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_bindir}/pkcheck
 %{_bindir}/pkttyagent
 %{_bindir}/pk-example-frobnicate
-%dir %{_libdir}/polkit-1
-%dir %{_libdir}/polkit-1/extensions
-%{_libdir}/polkit-1/extensions/*.so
-%{_libexecdir}/polkit-1/polkitd
+%{_systemunitdir}/polkit.service
+%dir %{_prefix}/lib/polkit-1
+%{_prefix}/lib/polkit-1/polkitd
 %{_datadir}/dbus-1/system-services/*
 %dir %{_datadir}/polkit-1/
 %dir %{_datadir}/polkit-1/actions
@@ -93,16 +96,8 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_mandir}/man8/*
 
 # see upstream docs for why these permissions are necessary
-%attr(0700,root,root) %dir %{_var}/lib/polkit-1/
 %attr(4755,root,root) %{_bindir}/pkexec
-%attr(4755,root,root) %{_libexecdir}/polkit-1/polkit-agent-helper-1
-
-%dir %{_localstatedir}/lib/polkit-1/localauthority
-%dir %{_localstatedir}/lib/polkit-1/localauthority/10-vendor.d
-%dir %{_localstatedir}/lib/polkit-1/localauthority/20-org.d
-%dir %{_localstatedir}/lib/polkit-1/localauthority/30-site.d
-%dir %{_localstatedir}/lib/polkit-1/localauthority/50-local.d
-%dir %{_localstatedir}/lib/polkit-1/localauthority/90-mandatory.d
+%attr(4755,root,root) %{_prefix}/lib/polkit-1/polkit-agent-helper-1
 
 %files -n %{libname}
 %{_libdir}/lib*-%{api}.so.%{major}*

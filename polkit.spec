@@ -73,7 +73,7 @@ autoreconf -fi
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 %pre
-%_pre_useradd polkitd /
+%_pre_useradd polkitd / /sbin/nologin
 
 %files -f polkit-1.lang
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.PolicyKit1.conf

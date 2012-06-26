@@ -79,7 +79,6 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %files -f polkit-1.lang
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
 %{_sysconfdir}/pam.d/polkit-1
-%{_sysconfdir}/polkit-1
 %{_bindir}/pkaction
 %{_bindir}/pkcheck
 %{_bindir}/pkttyagent
@@ -92,6 +91,10 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %dir %{_datadir}/polkit-1/actions
 %{_datadir}/polkit-1/actions/org.freedesktop.policykit.policy
 %{_datadir}/polkit-1/actions/org.freedesktop.policykit.examples.pkexec.policy
+%attr(0700,polkitd,root) %dir %{_datadir}/polkit-1/rules.d
+%dir %{_sysconfdir}/polkit-1
+%{_sysconfdir}/polkit-1/rules.d/50-default.rules
+%attr(0700,polkitd,root) %dir %{_sysconfdir}/polkit-1/rules.d
 %{_mandir}/man1/*
 %{_mandir}/man8/*
 

@@ -19,7 +19,6 @@ BuildRequires: intltool
 BuildRequires: expat-devel
 BuildRequires: pam-devel
 BuildRequires: pkgconfig(mozjs185)
-BuildRequires: pkgconfig(eggdbus-1)
 BuildRequires: pkgconfig(gobject-introspection-1.0)
 Requires: consolekit
 

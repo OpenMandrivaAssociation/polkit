@@ -20,6 +20,7 @@ BuildRequires: expat-devel
 BuildRequires: pam-devel
 BuildRequires: pkgconfig(mozjs185)
 BuildRequires: pkgconfig(gobject-introspection-1.0)
+BuildRequires: systemd-units
 Requires: consolekit
 
 %description
@@ -60,7 +61,7 @@ autoreconf -fi
 %configure2_5x \
 	--enable-gtk-doc \
 	--disable-static \
-	--enable-systemd=yes
+	--with-systemdsystemunitdir=%{_systemunitdir}
 
 %make
 

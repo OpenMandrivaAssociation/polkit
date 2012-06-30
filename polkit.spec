@@ -5,23 +5,24 @@
 %define girname %mklibname %{name}-gir %{gir_major}
 %define develname %mklibname -d %{name} %{api}
 
-Summary: PolicyKit Authorization Framework
-Name: polkit
-Version: 0.106
-Release: 1
-License: LGPLv2+
-Group: System/Libraries
-URL: http://www.freedesktop.org/wiki/Software/PolicyKit
-Source0: http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
+Summary:	PolicyKit Authorization Framework
+Name:		polkit
+Version:	0.106
+Release:	2
+License:	LGPLv2+
+Group:		System/Libraries
+URL:		http://www.freedesktop.org/wiki/Software/PolicyKit
+Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 
-BuildRequires: gtk-doc
-BuildRequires: intltool
-BuildRequires: expat-devel
-BuildRequires: pam-devel
-BuildRequires: pkgconfig(mozjs185)
-BuildRequires: pkgconfig(gobject-introspection-1.0)
-BuildRequires: systemd-units
-Requires: consolekit
+BuildRequires:	gtk-doc
+BuildRequires:	intltool
+BuildRequires:	expat-devel
+BuildRequires:	pam-devel
+BuildRequires:	pkgconfig(mozjs185)
+BuildRequires:	pkgconfig(gobject-introspection-1.0)
+BuildRequires:	pkgconfig(libsystemd-login)
+BuildRequires:	pkgconfig(systemd)
+Requires:	consolekit
 
 %description
 PolicyKit is a toolkit for defining and handling authorizations.
@@ -29,8 +30,8 @@ It is used for allowing unprivileged processes to speak to privileged
 processes.
 
 %package -n %{libname}
-Group: System/Libraries
-Summary: PolicyKit Authorization Framework
+Group:		System/Libraries
+Summary:	PolicyKit Authorization Framework
 
 %description -n %{libname}
 This package contains the shared libraries of %{name}.
@@ -44,29 +45,31 @@ Conflicts:	polkit < 0.104-3
 GObject Introspection interface library for %{name}.
 
 %package -n %{develname}
-Summary: Development files for PolicyKit
-Group: Development/C
-Requires: %{libname} = %{version}-%{release}
-Provides: polkit-%{api}-devel = %{version}-%{release}
+Summary:	Development files for PolicyKit
+Group:		Development/C
+Requires:	%{libname} = %{version}-%{release}
+Provides:	polkit-%{api}-devel = %{version}-%{release}
 
 %description -n %{develname}
 Development files for PolicyKit.
 
 %prep
 %setup -q
-%apply_patches
-autoreconf -fi
 
 %build
 %configure2_5x \
 	--enable-gtk-doc \
 	--disable-static \
-	--with-systemdsystemunitdir=%{_systemunitdir}
+	--libexecdir=%{_libexecdir}/polkit-1 \
+	--with-systemdsystemunitdir=%{_systemunitdir} \
+	--enable-systemd=yes
 
 %make
 
 %install
 %makeinstall_std
+# (cg) Make the rules dir (this is where other packages should ship their rules)
+mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 
 %find_lang polkit-1 polkit-1.lang
 
@@ -74,7 +77,10 @@ autoreconf -fi
 find %{buildroot} -name '*.la' -exec rm -f {} ';'
 
 %pre
-%_pre_useradd polkitd / /sbin/nologin
+%_pre_useradd polkitd %{_prefix}/lib/polkit-1 /sbin/nologin
+
+%postun
+%_postun_userdel polkitd
 
 %files -f polkit-1.lang
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
@@ -114,4 +120,3 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %{_libdir}/pkgconfig/*.pc
 %{_datadir}/gir-1.0/*.gir
 %{_datadir}/gtk-doc/html/*
-

@@ -7,8 +7,8 @@
 
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
-Version:	0.106
-Release:	2
+Version:	0.107
+Release:	1
 License:	LGPLv2+
 Group:		System/Libraries
 URL:		http://www.freedesktop.org/wiki/Software/PolicyKit

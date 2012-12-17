@@ -79,7 +79,7 @@ libtoolize --copy --force; aclocal; autoheader; automake --add-missing --force-m
     --enable-introspection \
     --enable-systemd=yes
 
-%make LIBS="-lgmodule"
+%make LIBS="-lgmodule-2.0"
 
 %install
 %makeinstall_std

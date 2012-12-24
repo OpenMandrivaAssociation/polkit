@@ -7,7 +7,7 @@
 
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
-Version:	0.108
+Version:	0.109
 Release:	1
 License:	LGPLv2+
 Group:		System/Libraries

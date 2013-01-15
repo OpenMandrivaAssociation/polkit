@@ -5,14 +5,14 @@
 %define girname %mklibname %{name}-gir %{gir_major}
 %define develname %mklibname -d %{name} %{api}
 
-Summary:	PolicyKit Authorization Framework
-Name:		polkit
-Version:	0.109
-Release:	1
-License:	LGPLv2+
-Group:		System/Libraries
-URL:		http://www.freedesktop.org/wiki/Software/PolicyKit
-Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
+Summary:		PolicyKit Authorization Framework
+Name:			polkit
+Version:		0.109
+Release:		1
+License:		LGPLv2+
+Group:			System/Libraries
+URL:			http://www.freedesktop.org/wiki/Software/PolicyKit
+Source0:		http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	expat-devel
@@ -23,17 +23,18 @@ BuildRequires:	pkgconfig(libsystemd-login)
 BuildRequires:	pkgconfig(systemd)
 # (cg) Only needed due to patches+autoconf
 BuildRequires:	gettext-devel
-Requires:	dbus
+Requires:		dbus
+Requires(pre):	systemd-units
 
-Obsoletes: PolicyKit <= 0.10
-Provides: PolicyKit = 0.11
+Obsoletes:		PolicyKit <= 0.10
+Provides:		PolicyKit = 0.11
 
 # polkit saw some API/ABI changes from 0.96 to 0.97 so require a
 # sufficiently new polkit-gnome package
-Conflicts: polkit-gnome < 0.97
+Conflicts:		polkit-gnome < 0.97
 
-Obsoletes: polkit-desktop-policy < 0.103
-Provides: polkit-desktop-policy = 0.103
+Obsoletes:		polkit-desktop-policy < 0.103
+Provides:		polkit-desktop-policy = 0.103
 
 %description
 PolicyKit is a toolkit for defining and handling authorizations.
@@ -60,9 +61,9 @@ Summary:	Development files for PolicyKit
 Group:		Development/C
 Requires:	%{libname} = %{version}-%{release}
 Provides:	polkit-%{api}-devel = %{version}-%{release}
-Requires: pkgconfig(glib-2.0)
-Obsoletes: PolicyKit-devel <= 0.10
-Provides: PolicyKit-devel = 0.11
+Requires:	pkgconfig(glib-2.0)
+Obsoletes:	PolicyKit-devel <= 0.10
+Provides:	PolicyKit-devel = 0.11
 
 %description -n %{develname}
 Development files for PolicyKit.

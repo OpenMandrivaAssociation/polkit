@@ -7,12 +7,13 @@
 
 Summary:		PolicyKit Authorization Framework
 Name:			polkit
-Version:		0.109
+Version:		0.110
 Release:		1
 License:		LGPLv2+
 Group:			System/Libraries
 URL:			http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:		http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
+Patch0:		polkit-automake-1.13.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	expat-devel
@@ -35,6 +36,13 @@ Conflicts:		polkit-gnome < 0.97
 
 Obsoletes:		polkit-desktop-policy < 0.103
 Provides:		polkit-desktop-policy = 0.103
+
+%track
+prog %name = {
+	url = http://www.freedesktop.org/software/polkit/releases
+	regex = %name-(__VER__)\.tar\.gz
+	version = %version
+}
 
 %description
 PolicyKit is a toolkit for defining and handling authorizations.
@@ -70,6 +78,7 @@ Development files for PolicyKit.
 
 %prep
 %setup -q
+%apply_patches
 
 %build
 libtoolize --copy --force; aclocal; autoheader; automake --add-missing --force-missing; autoconf

@@ -1,0 +1,11 @@
+--- polkit-0.110/configure.ac.bero	2013-01-16 02:07:41.222605911 +0100
++++ polkit-0.110/configure.ac	2013-01-16 02:07:46.859538193 +0100
+@@ -3,7 +3,7 @@ dnl Process this file with autoconf to p
+ AC_PREREQ(2.59c)
+ AC_INIT(polkit, 0.110 http://lists.freedesktop.org/mailman/listinfo/polkit-devel)
+ AM_INIT_AUTOMAKE(polkit, 0.110)
+-AM_CONFIG_HEADER(config.h)
++AC_CONFIG_HEADERS([config.h])
+ AM_MAINTAINER_MODE
+ 
+ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])

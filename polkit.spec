@@ -8,12 +8,12 @@
 Summary:		PolicyKit Authorization Framework
 Name:			polkit
 Version:		0.110
-Release:		1
+Release:		2
 License:		LGPLv2+
 Group:			System/Libraries
 URL:			http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:		http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
-Patch0:		polkit-automake-1.13.patch
+Patch0:			polkit-automake-1.13.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	expat-devel
@@ -29,6 +29,8 @@ Requires(pre):	systemd-units
 
 Obsoletes:		PolicyKit <= 0.10
 Provides:		PolicyKit = 0.11
+Obsoletes:		policykit <= 0.10
+Provides:		policykit = 0.11
 
 # polkit saw some API/ABI changes from 0.96 to 0.97 so require a
 # sufficiently new polkit-gnome package

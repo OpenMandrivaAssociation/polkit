@@ -13,7 +13,6 @@ License:		LGPLv2+
 Group:			System/Libraries
 URL:			http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:		http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
-Patch0:			polkit-automake-1.13.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	expat-devel
@@ -80,7 +79,6 @@ Development files for PolicyKit.
 
 %prep
 %setup -q
-%apply_patches
 
 %build
 libtoolize --copy --force; aclocal; autoheader; automake --add-missing --force-missing; autoconf

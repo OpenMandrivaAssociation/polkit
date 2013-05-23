@@ -81,7 +81,6 @@ Development files for PolicyKit.
 %setup -q
 
 %build
-libtoolize --copy --force; aclocal; autoheader; automake --add-missing --force-missing; autoconf
 %configure2_5x \
 	--enable-gtk-doc \
 	--disable-static \

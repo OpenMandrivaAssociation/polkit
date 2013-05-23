@@ -87,7 +87,7 @@ libtoolize --copy --force; aclocal; autoheader; automake --add-missing --force-m
 	--disable-static \
 	--libexecdir=%{_libexecdir}/polkit-1 \
     --enable-introspection \
-    --enable-systemd=yes
+    --enable-libsystemd-login=yes
 
 %make LIBS="-lgmodule-2.0"
 

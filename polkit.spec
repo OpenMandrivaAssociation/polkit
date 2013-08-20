@@ -8,7 +8,7 @@
 Summary:		PolicyKit Authorization Framework
 Name:			polkit
 Version:		0.111
-Release:		1
+Release:		2
 License:		LGPLv2+
 Group:			System/Libraries
 URL:			http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -24,19 +24,14 @@ BuildRequires:	pkgconfig(systemd)
 # (cg) Only needed due to patches+autoconf
 BuildRequires:	gettext-devel
 Requires:		dbus
-Requires(pre):	systemd-units
-
-Obsoletes:		PolicyKit <= 0.10
-Provides:		PolicyKit = 0.11
-Obsoletes:		policykit <= 0.10
-Provides:		policykit = 0.11
-
+Requires(pre):	rpm-helper
+Requires(post):	rpm-helper
+Requires(preun):	rpm-helper
 # polkit saw some API/ABI changes from 0.96 to 0.97 so require a
 # sufficiently new polkit-gnome package
 Conflicts:		polkit-gnome < 0.97
-
-Obsoletes:		polkit-desktop-policy < 0.103
-Provides:		polkit-desktop-policy = 0.103
+%rename			PolicyKit
+%rename			polkit-desktop-policy
 
 %track
 prog %name = {
@@ -81,6 +76,8 @@ Development files for PolicyKit.
 %setup -q
 
 %build
+%serverbuild_hardened
+
 %configure2_5x \
 	--enable-gtk-doc \
 	--disable-static \
@@ -104,8 +101,10 @@ find %{buildroot} -name '*.la' -exec rm -f {} ';'
 %_pre_useradd polkitd %{_prefix}/lib/polkit-1 /sbin/nologin
 
 %post
-# (cg) Previous package enabled this but it's now purely dbus activated
-rm -f %{_sysconfdir}/systemd/system/graphical.target.wants/polkitd.service
+%systemd_post polkit.service
+
+%preun
+%systemd_preun polkit.service
 
 %postun
 %_postun_userdel polkitd

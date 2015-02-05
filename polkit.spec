@@ -10,11 +10,13 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.112
-Release:	9
+Release:	10
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
+# (tpg) https://bugs.freedesktop.org/show_bug.cgi?id=88288
+Patch0:		0000-polkit-0.112-authority-Fix-memory-leak-in-EnumerateActions.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	pam-devel
@@ -92,10 +94,11 @@ Development files for PolicyKit.
 
 %prep
 %setup -q
+%apply_patches
 
 %build
 %serverbuild_hardened
-%configure2_5x \
+%configure \
 	--enable-gtk-doc \
 	--disable-static \
 	--libexecdir=%{_libexecdir}/polkit-1 \
@@ -113,12 +116,6 @@ mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 
 %pre
 %_pre_useradd polkitd %{_prefix}/lib/polkit-1 /sbin/nologin
-
-%post
-%systemd_post polkit.service
-
-%preun
-%systemd_preun polkit.service
 
 %postun
 %_postun_userdel polkitd

@@ -10,13 +10,21 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.112
-Release:	10
+Release:	11
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
+# https://bugs.freedesktop.org/show_bug.cgi?id=71894
+Patch0: polkit-0.112-XDG_RUNTIME_DIR.patch
+# https://bugs.freedesktop.org/show_bug.cgi?id=60847
+Patch1: polkit-0.112-PolkitAgentSession-race.patch
+# http://cgit.freedesktop.org/polkit/commit/?id=26d0c0578211fb96fc8fe75572aa11ad6ecbf9b8
+Patch2: polkit-0.112-systemd-Deduplicate-code-paths.patch
+# http://cgit.freedesktop.org/polkit/commit/?id=a68f5dfd7662767b7b9822090b70bc5bd145c50c
+Patch3: polkit-0.112-systemd-prepare-for-D-Bus-user-bus.patch
 # (tpg) https://bugs.freedesktop.org/show_bug.cgi?id=88288
-Patch0:		0000-polkit-0.112-authority-Fix-memory-leak-in-EnumerateActions.patch
+Patch4:		0000-polkit-0.112-authority-Fix-memory-leak-in-EnumerateActions.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	pam-devel
@@ -98,6 +106,8 @@ Development files for PolicyKit.
 
 %build
 %serverbuild_hardened
+autoreconf -fiv
+
 %configure \
 	--enable-gtk-doc \
 	--disable-static \

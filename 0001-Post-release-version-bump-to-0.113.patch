@@ -1,0 +1,67 @@
+From 796d8cdc1c6d528d05d1717e394588e4bf63e15f Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Miloslav=20Trma=C4=8D?= <mitr@redhat.com>
+Date: Wed, 18 Sep 2013 19:21:17 +0200
+Subject: [PATCH] Post-release version bump to 0.113
+
+---
+ NEWS         | 32 ++++++++++++++++++++++++++++++++
+ configure.ac |  2 +-
+ 2 files changed, 33 insertions(+), 1 deletion(-)
+
+diff --git a/NEWS b/NEWS
+index 4262392..e785172 100644
+--- a/NEWS
++++ b/NEWS
+@@ -1,4 +1,36 @@
+ --------------
++polkit 0.113
++--------------
++
++NOTE: This release is an important security update, see below.
++
++WARNING WARNING WARNING: This is a prerelease on the road to polkit
++1.0. Public API might change and certain parts of the code still needs
++some security review. Use at your own risk.
++
++This is polkit 0.113.
++
++Highlights:
++ TODO
++
++Build requirements
++
++ glib, gobject, gio    >= 2.30
++ mozjs185 or mozjs-17.0
++ gobject-introspection >= 0.6.2 (optional)
++ pam (optional)
++ ConsoleKit OR systemd
++
++Changes since polkit 0.112:
++
++ TODO
++
++Thanks to our contributors.
++
++Colin Walters and Miloslav Trmač,
++$DATE
++
++--------------
+ polkit 0.112
+ --------------
+ 
+diff --git a/configure.ac b/configure.ac
+index 4bb6d90..2128263 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1,7 +1,7 @@
+ dnl Process this file with autoconf to produce a configure script.
+ 
+ AC_PREREQ(2.59c)
+-AC_INIT([polkit], [0.112], [http://lists.freedesktop.org/mailman/listinfo/polkit-devel], , [http://www.freedesktop.org/wiki/Software/polkit])
++AC_INIT([polkit], [0.113], [http://lists.freedesktop.org/mailman/listinfo/polkit-devel], , [http://www.freedesktop.org/wiki/Software/polkit])
+ AM_INIT_AUTOMAKE([])
+ AC_CONFIG_HEADERS(config.h)
+ AM_MAINTAINER_MODE
+-- 
+1.9.0
+

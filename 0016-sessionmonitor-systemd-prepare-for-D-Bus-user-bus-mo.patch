@@ -1,7 +1,8 @@
 From a68f5dfd7662767b7b9822090b70bc5bd145c50c Mon Sep 17 00:00:00 2001
 From: Kay Sievers <kay@vrfy.org>
 Date: Mon, 19 May 2014 10:19:49 +0900
-Subject: [PATCH] sessionmonitor-systemd: prepare for D-Bus "user bus" model
+Subject: [PATCH 16/18] sessionmonitor-systemd: prepare for D-Bus "user bus"
+ model
 
 In the D-Bus "user bus" model, all sessions of a user share the same
 D-Bus instance, a polkit requesting process might live outside the
@@ -83,5 +84,5 @@ index 756b728..9995f87 100644
    return session;
  }
 -- 
-2.0.0
+1.9.0
 

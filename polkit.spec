@@ -10,21 +10,29 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.112
-Release:	11
+Release:	12
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
-# https://bugs.freedesktop.org/show_bug.cgi?id=71894
-Patch0: polkit-0.112-XDG_RUNTIME_DIR.patch
-# https://bugs.freedesktop.org/show_bug.cgi?id=60847
-Patch1: polkit-0.112-PolkitAgentSession-race.patch
-# http://cgit.freedesktop.org/polkit/commit/?id=26d0c0578211fb96fc8fe75572aa11ad6ecbf9b8
-Patch2: polkit-0.112-systemd-Deduplicate-code-paths.patch
-# http://cgit.freedesktop.org/polkit/commit/?id=a68f5dfd7662767b7b9822090b70bc5bd145c50c
-Patch3: polkit-0.112-systemd-prepare-for-D-Bus-user-bus.patch
-# (tpg) https://bugs.freedesktop.org/show_bug.cgi?id=88288
-Patch4:		0000-polkit-0.112-authority-Fix-memory-leak-in-EnumerateActions.patch
+Patch0:		0001-Post-release-version-bump-to-0.113.patch
+Patch1:		0002-PolkitSystemBusName-Add-public-API-to-retrieve-Unix-.patch
+Patch2:		0003-examples-cancel-Fix-to-securely-lookup-subject.patch
+Patch3:		0004-Fixed-compilation-problem-in-the-backend.patch
+Patch4:		0005-Don-t-discard-error-data-returned-by-polkit_system_b.patch
+Patch5:		0006-sessionmonitor-systemd-Deduplicate-code-paths.patch
+Patch6:		0007-PolkitSystemBusName-Retrieve-both-pid-and-uid.patch
+Patch7:		0008-Port-internals-non-deprecated-PolkitProcess-API-wher.patch
+Patch8:		0009-Use-G_GNUC_BEGIN_IGNORE_DEPRECATIONS-to-avoid-warnin.patch
+Patch9:		0010-pkexec-Work-around-systemd-injecting-broken-XDG_RUNT.patch
+Patch10:	0011-Fix-a-memory-leak.patch
+Patch11:	0012-PolkitAgentSession-fix-race-between-child-and-io-wat.patch
+Patch12:	0013-pkexec-Support-just-plain-pkexec-to-run-shell.patch
+Patch13:	0014-build-Fix-several-issues-on-FreeBSD.patch
+Patch14:	0015-polkitd-Fix-problem-with-removing-non-existent-sourc.patch
+Patch15:	0016-sessionmonitor-systemd-prepare-for-D-Bus-user-bus-mo.patch
+Patch16:	0017-Refuse-duplicate-user-arguments-to-pkexec.patch
+Patch17:	0018-authority-Fix-memory-leak-in-EnumerateActions-call-r.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	pam-devel
@@ -105,7 +113,6 @@ Development files for PolicyKit.
 %apply_patches
 
 %build
-%serverbuild_hardened
 autoreconf -fiv
 
 %configure \
@@ -174,4 +181,3 @@ mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 %{_libdir}/pkgconfig/*.pc
 %{_datadir}/gir-1.0/*.gir
 %{_datadir}/gtk-doc/html/*
-

@@ -1,0 +1,32 @@
+From aa4cd969b7371d73da49700d0098e41874a370e6 Mon Sep 17 00:00:00 2001
+From: Colin Walters <walters@verbum.org>
+Date: Thu, 7 Nov 2013 17:18:52 -0500
+Subject: [PATCH 03/18] examples/cancel: Fix to securely lookup subject
+
+This is just an uninstalled example, but it needed the same fix as was
+done for pkexec with the 3b12cfac29dddd27f1f166a7574d8374cc1dccf2
+commit.
+
+This drops use of deprecated API.
+
+https://bugs.freedesktop.org/show_bug.cgi?id=69538
+---
+ src/examples/cancel.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/examples/cancel.c b/src/examples/cancel.c
+index 7978ebe..1470025 100644
+--- a/src/examples/cancel.c
++++ b/src/examples/cancel.c
+@@ -128,7 +128,7 @@ main (int argc, char *argv[])
+       g_printerr ("Parent process was reaped by init(1)\n");
+       return 1;
+     }
+-  subject = polkit_unix_process_new (parent_pid);
++  subject = polkit_unix_process_new_for_owner (parent_pid, 0, getuid ());
+ 
+   cancellable = g_cancellable_new ();
+ 
+-- 
+1.9.0
+

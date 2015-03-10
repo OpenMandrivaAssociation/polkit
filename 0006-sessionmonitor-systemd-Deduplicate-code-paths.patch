@@ -1,7 +1,7 @@
 From 26d0c0578211fb96fc8fe75572aa11ad6ecbf9b8 Mon Sep 17 00:00:00 2001
 From: Colin Walters <walters@verbum.org>
 Date: Thu, 7 Nov 2013 15:57:50 -0500
-Subject: [PATCH] sessionmonitor-systemd: Deduplicate code paths
+Subject: [PATCH 06/18] sessionmonitor-systemd: Deduplicate code paths
 
 We had the code to go from pid -> session duplicated.  If we have a
 PolkitSystemBusName, convert it to a PolkitUnixProcess.
@@ -103,5 +103,5 @@ index 0185310..756b728 100644
  }
  
 -- 
-2.0.0
+1.9.0
 

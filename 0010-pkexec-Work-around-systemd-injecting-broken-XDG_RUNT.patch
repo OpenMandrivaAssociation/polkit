@@ -1,7 +1,8 @@
 From 8635ffc16aeff6a07d675f861fe0dea03ea81d7e Mon Sep 17 00:00:00 2001
 From: Colin Walters <walters@verbum.org>
 Date: Thu, 21 Nov 2013 17:39:37 -0500
-Subject: [PATCH] pkexec: Work around systemd injecting broken XDG_RUNTIME_DIR
+Subject: [PATCH 10/18] pkexec: Work around systemd injecting broken
+ XDG_RUNTIME_DIR
 
 This workaround isn't too much code, and it's often better to fix bugs
 in two places anyways.
@@ -74,5 +75,5 @@ index 005e1fe..a7ca8e0 100644
        goto out;
      }
 -- 
-1.8.3.1
+1.9.0
 

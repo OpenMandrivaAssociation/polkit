@@ -1,7 +1,8 @@
 From 7650ad1e08ab13bdb461783c4995d186d9392840 Mon Sep 17 00:00:00 2001
 From: Rui Matos <tiagomatos@gmail.com>
 Date: Thu, 6 Feb 2014 18:41:18 +0100
-Subject: [PATCH] PolkitAgentSession: fix race between child and io watches
+Subject: [PATCH 12/18] PolkitAgentSession: fix race between child and io
+ watches
 
 The helper flushes and fdatasyncs stdout and stderr before terminating
 but this doesn't guarantee that our io watch is called before our
@@ -116,5 +117,5 @@ index 1c7a2dc..f014773 100644
    g_source_attach (session->child_stdout_watch_source, g_main_context_get_thread_default ());
  
 -- 
-1.8.3.1
+1.9.0
 

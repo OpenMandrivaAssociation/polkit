@@ -10,7 +10,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.112
-Release:	14
+Release:	15
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -49,7 +49,7 @@ BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(libsystemd-login)
 BuildRequires:	pkgconfig(mozjs185)
-BuildRequires:	pkgconfig(libsystemd)
+BuildRequires:	pkgconfig(libsystemd-login)
 # (cg) Only needed due to patches+autoconf
 BuildRequires:	gettext-devel
 Requires:	dbus

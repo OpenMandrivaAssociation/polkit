@@ -37,9 +37,8 @@ Patch18:	0019-Use-libsystemd-instead-of-older-libsystemd-login-if-.patch
 Patch19:	0020-.dir-locals-Style-for-Emacs-we-don-t-use-tabs.patch
 Patch20:	0021-authority-Avoid-cookie-wrapping-by-using-u64-counter.patch
 Patch21:	0022-CVE-2015-3218-backend-Handle-invalid-object-paths-in.patch
-Patch22:	0023-build-Start-using-git.mk.patch
-Patch23:	0024-sessionmonitor-systemd-Use-sd_uid_get_state-to-check.patch
-Patch24:	0025-Revert-authority-Avoid-cookie-wrapping-by-using-u64-.patch
+Patch22:	0024-sessionmonitor-systemd-Use-sd_uid_get_state-to-check.patch
+Patch23:	0025-Revert-authority-Avoid-cookie-wrapping-by-using-u64-.patch
 
 # (tpg) https://bugs.freedesktop.org/show_bug.cgi?id=83590
 Patch100:	polkit-0.112-do-not-insert-again-same-action_id.patch

@@ -10,7 +10,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.112
-Release:	13
+Release:	14
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -33,8 +33,16 @@ Patch14:	0015-polkitd-Fix-problem-with-removing-non-existent-sourc.patch
 Patch15:	0016-sessionmonitor-systemd-prepare-for-D-Bus-user-bus-mo.patch
 Patch16:	0017-Refuse-duplicate-user-arguments-to-pkexec.patch
 Patch17:	0018-authority-Fix-memory-leak-in-EnumerateActions-call-r.patch
+Patch18:	0019-Use-libsystemd-instead-of-older-libsystemd-login-if-.patch
+Patch19:	0020-.dir-locals-Style-for-Emacs-we-don-t-use-tabs.patch
+Patch20:	0021-authority-Avoid-cookie-wrapping-by-using-u64-counter.patch
+Patch21:	0022-CVE-2015-3218-backend-Handle-invalid-object-paths-in.patch
+Patch22:	0023-build-Start-using-git.mk.patch
+Patch23:	0024-sessionmonitor-systemd-Use-sd_uid_get_state-to-check.patch
+Patch24:	0025-Revert-authority-Avoid-cookie-wrapping-by-using-u64-.patch
+
 # (tpg) https://bugs.freedesktop.org/show_bug.cgi?id=83590
-Patch18:	polkit-0.112-do-not-insert-again-same-action_id.patch
+Patch100:	polkit-0.112-do-not-insert-again-same-action_id.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	pam-devel
@@ -42,7 +50,7 @@ BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(libsystemd-login)
 BuildRequires:	pkgconfig(mozjs185)
-BuildRequires:	pkgconfig(systemd)
+BuildRequires:	pkgconfig(libsystemd)
 # (cg) Only needed due to patches+autoconf
 BuildRequires:	gettext-devel
 Requires:	dbus

@@ -1,0 +1,636 @@
+From b19b4637c5d357f50f34a073a134e9dcd727fa1f Mon Sep 17 00:00:00 2001
+From: Colin Walters <walters@verbum.org>
+Date: Wed, 3 Jun 2015 16:11:08 -0400
+Subject: [PATCH 23/25] build: Start using git.mk
+
+I was looking at:
+https://bugs.freedesktop.org/show_bug.cgi?id=85504
+
+But polkit, particularly because of its use of recursive make, is a
+good fit for git.mk.
+---
+ .gitignore                     |  71 ++++++---
+ Makefile.am                    |   2 +
+ actions/Makefile.am            |   2 +
+ data/Makefile.am               |   2 +
+ docs/Makefile.am               |   2 +
+ docs/man/Makefile.am           |   2 +
+ docs/polkit/Makefile.am        |   2 +
+ git.mk                         | 333 +++++++++++++++++++++++++++++++++++++++++
+ src/Makefile.am                |   2 +
+ src/examples/Makefile.am       |   2 +
+ src/polkit/Makefile.am         |   2 +
+ src/polkitagent/Makefile.am    |   2 +
+ src/polkitbackend/Makefile.am  |   2 +
+ src/programs/Makefile.am       |   2 +
+ test/Makefile.am               |   2 +
+ test/mocklibc/Makefile.am      |   2 +
+ test/mocklibc/bin/Makefile.am  |   2 +
+ test/mocklibc/src/Makefile.am  |   2 +
+ test/polkit/Makefile.am        |   2 +
+ test/polkitbackend/Makefile.am |   2 +
+ 20 files changed, 417 insertions(+), 23 deletions(-)
+ create mode 100644 git.mk
+
+diff --git a/.gitignore b/.gitignore
+index d8b6f2e..1e31019 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,26 +1,51 @@
+-/INSTALL
++*.o
++.deps
++/*.bak
++/*.gcda
++/*.gcno
++/*.orig
++/*.rej
++/*.tab.c
++/*~
++/.*.sw[nop]
++/.dirstamp
++/.gitignore
++/GPATH
++/GRTAGS
++/GSYMS
++/GTAGS
++/ID
++/Makefile
++/Makefile.in
++/TAGS
+ /autom4te.cache
+-/aclocal.m4
+-/compile
+-/config.guess
+-/config.h.in
+-/config.sub
++/config.cache
++/config.h
++/config.log
++/config.lt
++/config.status
++/config.status.lineno
+ /configure
+-/depcomp
+-/gtk-doc.make
+-/install-sh
+-/ltmain.sh
+-/missing
++/configure.lineno
++/intltool-extract.in
++/intltool-merge.in
++/intltool-update.in
++/libtool
++/po/*.gmo
++/po/*.header
++/po/*.mo
++/po/*.sed
++/po/*.sin
++/po/.intltool-merge-cache
++/po/Makefile
++/po/Makefile.in
+ /po/Makefile.in.in
+-/test/mocklibc/aclocal.m4
+-/test/mocklibc/autom4te.cache
+-/test/mocklibc/config.guess
+-/test/mocklibc/config.h.in
+-/test/mocklibc/config.sub
+-/test/mocklibc/configure
+-/test/mocklibc/depcomp
+-/test/mocklibc/install-sh
+-/test/mocklibc/ltmain.sh
+-/test/mocklibc/missing
+-Makefile.in
+-*~
+\ No newline at end of file
++/po/Makefile.in.in~
++/po/Makevars.template
++/po/POTFILES
++/po/Rules-quot
++/po/polkit-1.pot
++/po/stamp-it
++/so_locations
++/stamp-h1
++/tags
+diff --git a/Makefile.am b/Makefile.am
+index 39e226a..a150180 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -34,3 +34,5 @@ publish-docs :
+ 
+ clean-local :
+ 	rm -f *~
++
++-include $(top_srcdir)/git.mk
+diff --git a/actions/Makefile.am b/actions/Makefile.am
+index f111078..4498f4a 100644
+--- a/actions/Makefile.am
++++ b/actions/Makefile.am
+@@ -14,3 +14,5 @@ clean-local :
+ DISTCLEANFILES = org.freedesktop.policykit.policy
+ 
+ EXTRA_DIST = org.freedesktop.policykit.policy.in
++
++-include $(top_srcdir)/git.mk
+diff --git a/data/Makefile.am b/data/Makefile.am
+index 426dc33..fe0f1d5 100644
+--- a/data/Makefile.am
++++ b/data/Makefile.am
+@@ -60,3 +60,5 @@ EXTRA_DIST = 							\
+ 
+ clean-local :
+ 	rm -f *~ $(service_DATA) $(dbusconf_DATA) $(systemdservice_DATA)
++
++-include $(top_srcdir)/git.mk
+diff --git a/docs/Makefile.am b/docs/Makefile.am
+index ccae4ce..8d7da9d 100644
+--- a/docs/Makefile.am
++++ b/docs/Makefile.am
+@@ -2,3 +2,5 @@
+ SUBDIRS = man polkit
+ 
+ EXTRA_DIST = version.xml.in
++
++-include $(top_srcdir)/git.mk
+diff --git a/docs/man/Makefile.am b/docs/man/Makefile.am
+index 86e1532..0b2dc44 100644
+--- a/docs/man/Makefile.am
++++ b/docs/man/Makefile.am
+@@ -28,3 +28,5 @@ EXTRA_DIST = 				\
+ 
+ clean-local:
+ 	rm -f *~ *.1 *.8
++
++-include $(top_srcdir)/git.mk
+diff --git a/docs/polkit/Makefile.am b/docs/polkit/Makefile.am
+index 9cf9d3f..cd163b4 100644
+--- a/docs/polkit/Makefile.am
++++ b/docs/polkit/Makefile.am
+@@ -103,3 +103,5 @@ CLEANFILES +=   *~				\
+ 		-rf html xml			\
+ 		$(NULL)
+ 
++
++-include $(top_srcdir)/git.mk
+diff --git a/git.mk b/git.mk
+new file mode 100644
+index 0000000..9d4bf25
+--- /dev/null
++++ b/git.mk
+@@ -0,0 +1,333 @@
++# git.mk, a small Makefile to autogenerate .gitignore files
++# for autotools-based projects.
++#
++# Copyright 2009, Red Hat, Inc.
++# Copyright 2010,2011,2012,2013 Behdad Esfahbod
++# Written by Behdad Esfahbod
++#
++# Copying and distribution of this file, with or without modification,
++# is permitted in any medium without royalty provided the copyright
++# notice and this notice are preserved.
++#
++# The latest version of this file can be downloaded from:
++GIT_MK_URL = https://raw.githubusercontent.com/behdad/git.mk/master/git.mk
++#
++# Bugs, etc, should be reported upstream at:
++#   https://github.com/behdad/git.mk
++#
++# To use in your project, import this file in your git repo's toplevel,
++# then do "make -f git.mk".  This modifies all Makefile.am files in
++# your project to -include git.mk.  Remember to add that line to new
++# Makefile.am files you create in your project, or just rerun the
++# "make -f git.mk".
++#
++# This enables automatic .gitignore generation.  If you need to ignore
++# more files, add them to the GITIGNOREFILES variable in your Makefile.am.
++# But think twice before doing that.  If a file has to be in .gitignore,
++# chances are very high that it's a generated file and should be in one
++# of MOSTLYCLEANFILES, CLEANFILES, DISTCLEANFILES, or MAINTAINERCLEANFILES.
++#
++# The only case that you need to manually add a file to GITIGNOREFILES is
++# when remove files in one of mostlyclean-local, clean-local, distclean-local,
++# or maintainer-clean-local make targets.
++#
++# Note that for files like editor backup, etc, there are better places to
++# ignore them.  See "man gitignore".
++#
++# If "make maintainer-clean" removes the files but they are not recognized
++# by this script (that is, if "git status" shows untracked files still), send
++# me the output of "git status" as well as your Makefile.am and Makefile for
++# the directories involved and I'll diagnose.
++#
++# For a list of toplevel files that should be in MAINTAINERCLEANFILES, see
++# Makefile.am.sample in the git.mk git repo.
++#
++# Don't EXTRA_DIST this file.  It is supposed to only live in git clones,
++# not tarballs.  It serves no useful purpose in tarballs and clutters the
++# build dir.
++#
++# This file knows how to handle autoconf, automake, libtool, gtk-doc,
++# gnome-doc-utils, yelp.m4, mallard, intltool, gsettings, dejagnu, appdata,
++# appstream.
++#
++# This makefile provides the following targets:
++#
++# - all: "make all" will build all gitignore files.
++# - gitignore: makes all gitignore files in the current dir and subdirs.
++# - .gitignore: make gitignore file for the current dir.
++# - gitignore-recurse: makes all gitignore files in the subdirs.
++#
++# KNOWN ISSUES:
++#
++# - Recursive configure doesn't work as $(top_srcdir)/git.mk inside the
++#   submodule doesn't find us.  If you have configure.{in,ac} files in
++#   subdirs, add a proxy git.mk file in those dirs that simply does:
++#   "include $(top_srcdir)/../git.mk".  Add more ..'s to your taste.
++#   And add those files to git.  See vte/gnome-pty-helper/git.mk for
++#   example.
++#
++
++
++
++###############################################################################
++# Variables user modules may want to add to toplevel MAINTAINERCLEANFILES:
++###############################################################################
++
++#
++# Most autotools-using modules should be fine including this variable in their
++# toplevel MAINTAINERCLEANFILES:
++GITIGNORE_MAINTAINERCLEANFILES_TOPLEVEL = \
++	$(srcdir)/aclocal.m4 \
++	$(srcdir)/autoscan.log \
++	$(srcdir)/configure.scan \
++	`AUX_DIR=$(srcdir)/$$(cd $(top_srcdir); $(AUTOCONF) --trace 'AC_CONFIG_AUX_DIR:$$1' ./configure.ac); \
++	 test "x$$AUX_DIR" = "x$(srcdir)/" && AUX_DIR=$(srcdir); \
++	 for x in \
++		ar-lib \
++		compile \
++		config.guess \
++		config.sub \
++		depcomp \
++		install-sh \
++		ltmain.sh \
++		missing \
++		mkinstalldirs \
++		test-driver \
++		ylwrap \
++	 ; do echo "$$AUX_DIR/$$x"; done` \
++	`cd $(top_srcdir); $(AUTOCONF) --trace 'AC_CONFIG_HEADERS:$$1' ./configure.ac | \
++	head -n 1 | while read f; do echo "$(srcdir)/$$f.in"; done`
++#
++# All modules should also be fine including the following variable, which
++# removes automake-generated Makefile.in files:
++GITIGNORE_MAINTAINERCLEANFILES_MAKEFILE_IN = \
++	`cd $(top_srcdir); $(AUTOCONF) --trace 'AC_CONFIG_FILES:$$1' ./configure.ac | \
++	while read f; do \
++	  case $$f in Makefile|*/Makefile) \
++	    test -f "$(srcdir)/$$f.am" && echo "$(srcdir)/$$f.in";; esac; \
++	done`
++#
++# Modules that use libtool and use  AC_CONFIG_MACRO_DIR() may also include this,
++# though it's harmless to include regardless.
++GITIGNORE_MAINTAINERCLEANFILES_M4_LIBTOOL = \
++	`MACRO_DIR=$(srcdir)/$$(cd $(top_srcdir); $(AUTOCONF) --trace 'AC_CONFIG_MACRO_DIR:$$1' ./configure.ac); \
++	 if test "x$$MACRO_DIR" != "x$(srcdir)/"; then \
++		for x in \
++			libtool.m4 \
++			ltoptions.m4 \
++			ltsugar.m4 \
++			ltversion.m4 \
++			lt~obsolete.m4 \
++		; do echo "$$MACRO_DIR/$$x"; done; \
++	 fi`
++
++
++
++###############################################################################
++# Default rule is to install ourselves in all Makefile.am files:
++###############################################################################
++
++git-all: git-mk-install
++
++git-mk-install:
++	@echo "Installing git makefile"
++	@any_failed=; \
++		find "`test -z "$(top_srcdir)" && echo . || echo "$(top_srcdir)"`" -name Makefile.am | while read x; do \
++		if grep 'include .*/git.mk' $$x >/dev/null; then \
++			echo "$$x already includes git.mk"; \
++		else \
++			failed=; \
++			echo "Updating $$x"; \
++			{ cat $$x; \
++			  echo ''; \
++			  echo '-include $$(top_srcdir)/git.mk'; \
++			} > $$x.tmp || failed=1; \
++			if test x$$failed = x; then \
++				mv $$x.tmp $$x || failed=1; \
++			fi; \
++			if test x$$failed = x; then : else \
++				echo "Failed updating $$x"; >&2 \
++				any_failed=1; \
++			fi; \
++	fi; done; test -z "$$any_failed"
++
++git-mk-update:
++	wget $(GIT_MK_URL) -O $(top_srcdir)/git.mk
++
++.PHONY: git-all git-mk-install git-mk-update
++
++
++
++###############################################################################
++# Actual .gitignore generation:
++###############################################################################
++
++$(srcdir)/.gitignore: Makefile.am $(top_srcdir)/git.mk
++	@echo "git.mk: Generating $@"
++	@{ \
++		if test "x$(DOC_MODULE)" = x -o "x$(DOC_MAIN_SGML_FILE)" = x; then :; else \
++			for x in \
++				$(DOC_MODULE)-decl-list.txt \
++				$(DOC_MODULE)-decl.txt \
++				tmpl/$(DOC_MODULE)-unused.sgml \
++				"tmpl/*.bak" \
++				xml html \
++			; do echo "/$$x"; done; \
++			FLAVOR=$$(cd $(top_srcdir); $(AUTOCONF) --trace 'GTK_DOC_CHECK:$$2' ./configure.ac); \
++			case $$FLAVOR in *no-tmpl*) echo /tmpl;; esac; \
++		fi; \
++		if test "x$(DOC_MODULE)$(DOC_ID)" = x -o "x$(DOC_LINGUAS)" = x; then :; else \
++			for lc in $(DOC_LINGUAS); do \
++				for x in \
++					$(if $(DOC_MODULE),$(DOC_MODULE).xml) \
++					$(DOC_PAGES) \
++					$(DOC_INCLUDES) \
++				; do echo "/$$lc/$$x"; done; \
++			done; \
++			for x in \
++				$(_DOC_OMF_ALL) \
++				$(_DOC_DSK_ALL) \
++				$(_DOC_HTML_ALL) \
++				$(_DOC_MOFILES) \
++				$(DOC_H_FILE) \
++				"*/.xml2po.mo" \
++				"*/*.omf.out" \
++			; do echo /$$x; done; \
++		fi; \
++		if test "x$(HELP_ID)" = x -o "x$(HELP_LINGUAS)" = x; then :; else \
++			for lc in $(HELP_LINGUAS); do \
++				for x in \
++					$(HELP_FILES) \
++					"$$lc.stamp" \
++					"$$lc.mo" \
++				; do echo "/$$lc/$$x"; done; \
++			done; \
++		fi; \
++		if test "x$(gsettings_SCHEMAS)" = x; then :; else \
++			for x in \
++				$(gsettings_SCHEMAS:.xml=.valid) \
++				$(gsettings__enum_file) \
++			; do echo "/$$x"; done; \
++		fi; \
++		if test "x$(appdata_XML)" = x; then :; else \
++			for x in \
++				$(appdata_XML:.xml=.valid) \
++			; do echo "/$$x"; done; \
++		fi; \
++		if test "x$(appstream_XML)" = x; then :; else \
++			for x in \
++				$(appstream_XML:.xml=.valid) \
++			; do echo "/$$x"; done; \
++		fi; \
++		if test -f $(srcdir)/po/Makefile.in.in; then \
++			for x in \
++				po/Makefile.in.in \
++				po/Makefile.in.in~ \
++				po/Makefile.in \
++				po/Makefile \
++				po/Makevars.template \
++				po/POTFILES \
++				po/Rules-quot \
++				po/stamp-it \
++				po/.intltool-merge-cache \
++				"po/*.gmo" \
++				"po/*.header" \
++				"po/*.mo" \
++				"po/*.sed" \
++				"po/*.sin" \
++				po/$(GETTEXT_PACKAGE).pot \
++				intltool-extract.in \
++				intltool-merge.in \
++				intltool-update.in \
++			; do echo "/$$x"; done; \
++		fi; \
++		if test -f $(srcdir)/configure; then \
++			for x in \
++				autom4te.cache \
++				configure \
++				config.h \
++				stamp-h1 \
++				libtool \
++				config.lt \
++			; do echo "/$$x"; done; \
++		fi; \
++		if test "x$(DEJATOOL)" = x; then :; else \
++			for x in \
++				$(DEJATOOL) \
++			; do echo "/$$x.sum"; echo "/$$x.log"; done; \
++			echo /site.exp; \
++		fi; \
++		if test "x$(am__dirstamp)" = x; then :; else \
++			echo "$(am__dirstamp)"; \
++		fi; \
++		if test "x$(LTCOMPILE)" = x -a "x$(LTCXXCOMPILE)" = x -a "x$(GTKDOC_RUN)" = x; then :; else \
++			for x in \
++				"*.lo" \
++				".libs" "_libs" \
++			; do echo "$$x"; done; \
++		fi; \
++		for x in \
++			.gitignore \
++			$(GITIGNOREFILES) \
++			$(CLEANFILES) \
++			$(PROGRAMS) $(check_PROGRAMS) $(EXTRA_PROGRAMS) \
++			$(LIBRARIES) $(check_LIBRARIES) $(EXTRA_LIBRARIES) \
++			$(LTLIBRARIES) $(check_LTLIBRARIES) $(EXTRA_LTLIBRARIES) \
++			so_locations \
++			$(MOSTLYCLEANFILES) \
++			$(TEST_LOGS) \
++			$(TEST_LOGS:.log=.trs) \
++			$(TEST_SUITE_LOG) \
++			$(TESTS:=.test) \
++			"*.gcda" \
++			"*.gcno" \
++			$(DISTCLEANFILES) \
++			$(am__CONFIG_DISTCLEAN_FILES) \
++			$(CONFIG_CLEAN_FILES) \
++			TAGS ID GTAGS GRTAGS GSYMS GPATH tags \
++			"*.tab.c" \
++			$(MAINTAINERCLEANFILES) \
++			$(BUILT_SOURCES) \
++			$(patsubst %.vala,%.c,$(filter %.vala,$(SOURCES))) \
++			$(filter %_vala.stamp,$(DIST_COMMON)) \
++			$(filter %.vapi,$(DIST_COMMON)) \
++			$(filter $(addprefix %,$(notdir $(patsubst %.vapi,%.h,$(filter %.vapi,$(DIST_COMMON))))),$(DIST_COMMON)) \
++			Makefile \
++			Makefile.in \
++			"*.orig" \
++			"*.rej" \
++			"*.bak" \
++			"*~" \
++			".*.sw[nop]" \
++			".dirstamp" \
++		; do echo "/$$x"; done; \
++		for x in \
++			"*.$(OBJEXT)" \
++			$(DEPDIR) \
++		; do echo "$$x"; done; \
++	} | \
++	sed "s@^/`echo "$(srcdir)" | sed 's/\(.\)/[\1]/g'`/@/@" | \
++	sed 's@/[.]/@/@g' | \
++	LC_ALL=C sort | uniq > $@.tmp && \
++	mv $@.tmp $@;
++
++all: $(srcdir)/.gitignore gitignore-recurse-maybe
++gitignore: $(srcdir)/.gitignore gitignore-recurse
++
++gitignore-recurse-maybe:
++	@for subdir in $(DIST_SUBDIRS); do \
++	  case " $(SUBDIRS) " in \
++	    *" $$subdir "*) :;; \
++	    *) test "$$subdir" = . -o -e "$$subdir/.git" || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) gitignore || echo "Skipping $$subdir");; \
++	  esac; \
++	done
++gitignore-recurse:
++	@for subdir in $(DIST_SUBDIRS); do \
++	    test "$$subdir" = . -o -e "$$subdir/.git" || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) gitignore || echo "Skipping $$subdir"); \
++	done
++
++maintainer-clean: gitignore-clean
++gitignore-clean:
++	-rm -f $(srcdir)/.gitignore
++
++.PHONY: gitignore-clean gitignore gitignore-recurse gitignore-recurse-maybe
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 96c1e0c..09fc7b3 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -7,3 +7,5 @@ endif
+ 
+ clean-local :
+ 	rm -f *~
++
++-include $(top_srcdir)/git.mk
+diff --git a/src/examples/Makefile.am b/src/examples/Makefile.am
+index 88cea72..c749c54 100644
+--- a/src/examples/Makefile.am
++++ b/src/examples/Makefile.am
+@@ -64,3 +64,5 @@ EXTRA_DIST = org.freedesktop.policykit.examples.pkexec.policy.in
+ 
+ clean-local :
+ 	rm -f *~
++
++-include $(top_srcdir)/git.mk
+diff --git a/src/polkit/Makefile.am b/src/polkit/Makefile.am
+index 5f08bb2..0224b8c 100644
+--- a/src/polkit/Makefile.am
++++ b/src/polkit/Makefile.am
+@@ -137,3 +137,5 @@ dist-hook :
+ clean-local :
+ 	rm -f *~ $(polkit_built_sources) $(BUILT_SOURCES)
+ 
++
++-include $(top_srcdir)/git.mk
+diff --git a/src/polkitagent/Makefile.am b/src/polkitagent/Makefile.am
+index 3bc364e..bc930d2 100644
+--- a/src/polkitagent/Makefile.am
++++ b/src/polkitagent/Makefile.am
+@@ -154,3 +154,5 @@ dist-hook :
+ 
+ clean-local :
+ 	rm -f *~ $(marshal_built_sources) $(BUILT_SOURCES)
++
++-include $(top_srcdir)/git.mk
+diff --git a/src/polkitbackend/Makefile.am b/src/polkitbackend/Makefile.am
+index 5120e82..52013f6 100644
+--- a/src/polkitbackend/Makefile.am
++++ b/src/polkitbackend/Makefile.am
+@@ -110,3 +110,5 @@ install-data-hook:
+ 	mkdir -p $(DESTDIR)$(datadir)/polkit-1/rules.d
+ 	-chmod 700 $(DESTDIR)$(datadir)/polkit-1/rules.d
+ 	-chown $(POLKITD_USER) $(DESTDIR)$(datadir)/polkit-1/rules.d
++
++-include $(top_srcdir)/git.mk
+diff --git a/src/programs/Makefile.am b/src/programs/Makefile.am
+index 4e7273d..dee7cea 100644
+--- a/src/programs/Makefile.am
++++ b/src/programs/Makefile.am
+@@ -88,3 +88,5 @@ clean-local :
+ 
+ install-exec-hook :
+ 	-chmod 4755 $(DESTDIR)$(bindir)/pkexec
++
++-include $(top_srcdir)/git.mk
+diff --git a/test/Makefile.am b/test/Makefile.am
+index 598e426..59d0680 100644
+--- a/test/Makefile.am
++++ b/test/Makefile.am
+@@ -27,3 +27,5 @@ install-exec:; @:
+ install-data:; @:
+ uninstall:; @:
+ 
++
++-include $(top_srcdir)/git.mk
+diff --git a/test/mocklibc/Makefile.am b/test/mocklibc/Makefile.am
+index 3508ecd..ed6e185 100644
+--- a/test/mocklibc/Makefile.am
++++ b/test/mocklibc/Makefile.am
+@@ -1,3 +1,5 @@
+ 
+ SUBDIRS = src bin
+ EXTRA_DIST = example
++
++-include $(top_srcdir)/git.mk
+diff --git a/test/mocklibc/bin/Makefile.am b/test/mocklibc/bin/Makefile.am
+index a2e65e0..499c5c7 100644
+--- a/test/mocklibc/bin/Makefile.am
++++ b/test/mocklibc/bin/Makefile.am
+@@ -23,3 +23,5 @@ mocklibc mocklibc-test: Makefile
+ 
+ mocklibc: $(srcdir)/mocklibc.in
+ mocklibc-test: $(srcdir)/mocklibc-test.in
++
++-include $(top_srcdir)/git.mk
+diff --git a/test/mocklibc/src/Makefile.am b/test/mocklibc/src/Makefile.am
+index 7cb934e..1103b9d 100644
+--- a/test/mocklibc/src/Makefile.am
++++ b/test/mocklibc/src/Makefile.am
+@@ -6,3 +6,5 @@ bin_PROGRAMS = mocklibc-debug-netgroup
+ mocklibc_debug_netgroup_SOURCES = netgroup-debug.c netgroup-debug.h
+ mocklibc_debug_netgroup_LDADD = libmocklibc.la
+ 
++
++-include $(top_srcdir)/git.mk
+diff --git a/test/polkit/Makefile.am b/test/polkit/Makefile.am
+index 27bcb95..802f2be 100644
+--- a/test/polkit/Makefile.am
++++ b/test/polkit/Makefile.am
+@@ -50,3 +50,5 @@ TESTS = $(TEST_PROGS)
+ 
+ clean-local :
+ 	rm -f *~
++
++-include $(top_srcdir)/git.mk
+diff --git a/test/polkitbackend/Makefile.am b/test/polkitbackend/Makefile.am
+index bb82dd4..632571e 100644
+--- a/test/polkitbackend/Makefile.am
++++ b/test/polkitbackend/Makefile.am
+@@ -44,3 +44,5 @@ TESTS = $(TEST_PROGS)
+ 
+ clean-local :
+ 	rm -f *~
++
++-include $(top_srcdir)/git.mk
+-- 
+1.9.0
+

@@ -15,6 +15,7 @@ License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
+Patch0:		polkit-0.113-ABF-workaround.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	pam-devel

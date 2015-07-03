@@ -1,0 +1,12 @@
+diff -Naur polkit-0.113/configure.ac polkit-0.113.tpg/configure.ac
+--- polkit-0.113/configure.ac	2015-06-19 20:31:02.000000000 +0000
++++ polkit-0.113.tpg/configure.ac	2015-07-03 23:17:27.860915189 +0000
+@@ -227,7 +227,7 @@
+       AS_IF([test "$enable_libsystemd_login" = "yes"], [
+         AC_MSG_WARN([libsystemd requested but system does not appear to be using systemd])
+       ], [
+-        AC_MSG_ERROR([libsystemd autoconfigured, but system does not appear to use systemd])
++        AC_MSG_WARN([libsystemd autoconfigured, but system does not appear to use systemd])
+       ])
+     ])
+   ], [

@@ -21,7 +21,7 @@ BuildRequires:	pam-devel
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(mozjs185)
-BuildRequires:	pkgconfig(libsystemd-daemon)
+BuildRequires:	pkgconfig(libsystemd-login)
 BuildRequires:	pkgconfig(libsystemd)
 # (cg) Only needed due to patches+autoconf
 BuildRequires:	gettext-devel

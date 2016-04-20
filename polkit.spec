@@ -7,14 +7,12 @@
 
 Summary:		PolicyKit Authorization Framework
 Name:			polkit
-Version:		0.112
-Release:		6.1
+Version:		0.113
+Release:		0.1
 License:		LGPLv2+
 Group:			System/Libraries
 URL:			http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:		http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
-# (tpg) https://bugs.freedesktop.org/show_bug.cgi?id=88288
-Patch0:         0000-polkit-0.112-authority-Fix-memory-leak-in-EnumerateActions.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	expat-devel

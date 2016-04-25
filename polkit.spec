@@ -10,12 +10,20 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.113
-Release:	2
+Release:	3
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 Patch0:		polkit-0.113-ABF-workaround.patch
+# (tpg) patches from upstream git
+Patch1:		0000-Fix-abnomal-formatting-of-authentication-header-line.patch
+Patch2:		0001-Fix-multi-line-pam-text-info.patch
+Patch3:		0002-Refactor-send_to_helper-usage.patch
+Patch4:		0003-polkitagent-Fix-access-after-dereference-on-hashtabl.patch
+Patch5:		0004-Fix-a-memory-leak-of-PolkitAgentListener-s-Server-ob.patch
+Patch6:		0005-Remove-polkitbackendconfigsource.-ch.patch
+
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	pam-devel

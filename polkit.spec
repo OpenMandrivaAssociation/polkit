@@ -88,6 +88,7 @@ Development files for PolicyKit.
 
 %build
 %serverbuild_hardened
+autoreconf -fiv
 
 %configure2_5x \
 	--enable-gtk-doc \

@@ -10,7 +10,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.113
-Release:	3
+Release:	4
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -23,6 +23,8 @@ Patch3:		0002-Refactor-send_to_helper-usage.patch
 Patch4:		0003-polkitagent-Fix-access-after-dereference-on-hashtabl.patch
 Patch5:		0004-Fix-a-memory-leak-of-PolkitAgentListener-s-Server-ob.patch
 Patch6:		0005-Remove-polkitbackendconfigsource.-ch.patch
+Patch7:		0006-polkit-Add-g_autoptr-support-for-GObject-derived-pol.patch
+Patch8:		0007-data-Set-GIO_USE_VFS-local-in-the-environment.patch
 
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
@@ -30,7 +32,6 @@ BuildRequires:	pam-devel
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(mozjs185)
-BuildRequires:	pkgconfig(libsystemd-login)
 BuildRequires:	pkgconfig(libsystemd)
 # (cg) Only needed due to patches+autoconf
 BuildRequires:	gettext-devel

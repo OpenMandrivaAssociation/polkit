@@ -5,14 +5,24 @@
 %define girname %mklibname %{name}-gir %{gir_major}
 %define develname %mklibname -d %{name} %{api}
 
-Summary:		PolicyKit Authorization Framework
-Name:			polkit
-Version:		0.113
-Release:		0.1
-License:		LGPLv2+
-Group:			System/Libraries
-URL:			http://www.freedesktop.org/wiki/Software/PolicyKit
-Source0:		http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
+Summary:	PolicyKit Authorization Framework
+Name:		polkit
+Version:	0.113
+Release:	0.2
+License:	LGPLv2+
+Group:		System/Libraries
+URL:		http://www.freedesktop.org/wiki/Software/PolicyKit
+Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
+Patch0:		polkit-0.113-ABF-workaround.patch
+# (tpg) patches from upstream git
+Patch1:		0000-Fix-abnomal-formatting-of-authentication-header-line.patch
+Patch2:		0001-Fix-multi-line-pam-text-info.patch
+Patch3:		0002-Refactor-send_to_helper-usage.patch
+Patch4:		0003-polkitagent-Fix-access-after-dereference-on-hashtabl.patch
+Patch5:		0004-Fix-a-memory-leak-of-PolkitAgentListener-s-Server-ob.patch
+Patch6:		0005-Remove-polkitbackendconfigsource.-ch.patch
+Patch7:		0006-polkit-Add-g_autoptr-support-for-GObject-derived-pol.patch
+Patch8:		0007-data-Set-GIO_USE_VFS-local-in-the-environment.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	expat-devel
@@ -83,8 +93,8 @@ Development files for PolicyKit.
 	--enable-gtk-doc \
 	--disable-static \
 	--libexecdir=%{_libexecdir}/polkit-1 \
-    --enable-introspection \
-    --enable-libsystemd-login=yes
+	--enable-introspection \
+	--enable-libsystemd-login=yes
 
 %make LIBS="-lgmodule-2.0"
 

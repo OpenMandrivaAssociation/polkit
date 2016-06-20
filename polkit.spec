@@ -96,7 +96,7 @@ Development files for PolicyKit.
 	--enable-introspection \
 	--enable-libsystemd-login=yes
 
-%make LIBS="-lgmodule-2.0"
+%make -j1 LIBS="-lgmodule-2.0"
 
 %install
 %makeinstall_std

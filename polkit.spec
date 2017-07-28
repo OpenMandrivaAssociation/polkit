@@ -10,7 +10,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.113
-Release:	4
+Release:	6
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -25,6 +25,7 @@ Patch5:		0004-Fix-a-memory-leak-of-PolkitAgentListener-s-Server-ob.patch
 Patch6:		0005-Remove-polkitbackendconfigsource.-ch.patch
 Patch7:		0006-polkit-Add-g_autoptr-support-for-GObject-derived-pol.patch
 Patch8:		0007-data-Set-GIO_USE_VFS-local-in-the-environment.patch
+Patch9:		0008-polkitpermission-Fix-a-memory-leak-on-authority-chan.patch
 
 BuildRequires:	gtk-doc
 BuildRequires:	intltool

@@ -10,7 +10,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.113
-Release:	6
+Release:	7
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -26,7 +26,8 @@ Patch6:		0005-Remove-polkitbackendconfigsource.-ch.patch
 Patch7:		0006-polkit-Add-g_autoptr-support-for-GObject-derived-pol.patch
 Patch8:		0007-data-Set-GIO_USE_VFS-local-in-the-environment.patch
 Patch9:		0008-polkitpermission-Fix-a-memory-leak-on-authority-chan.patch
-
+# (tpg) export environemt vars
+Patch20:	x11vars.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	pam-devel
@@ -112,7 +113,8 @@ autoreconf -fiv
 	--enable-gtk-doc \
 	--disable-static \
 	--libexecdir=%{_libexecdir}/polkit-1 \
-	--enable-introspection
+	--enable-introspection \
+	--enable-libsystemd-login=yes
 
 %make LIBS="-lgmodule-2.0"
 

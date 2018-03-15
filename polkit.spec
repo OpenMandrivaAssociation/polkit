@@ -45,13 +45,6 @@ Conflicts:	polkit-gnome < 0.97
 %rename		PolicyKit
 %rename		polkit-desktop-policy
 
-%track
-prog %name = {
-	url = http://www.freedesktop.org/software/polkit/releases
-	regex = %name-(__VER__)\.tar\.gz
-	version = %version
-}
-
 %description
 PolicyKit is a toolkit for defining and handling authorizations.
 It is used for allowing unprivileged processes to speak to privileged

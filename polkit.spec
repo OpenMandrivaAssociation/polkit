@@ -9,23 +9,13 @@
 
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
-Version:	0.113
-Release:	7
+Version:	0.114
+Release:	1
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 Patch0:		polkit-0.113-ABF-workaround.patch
-# (tpg) patches from upstream git
-Patch1:		0000-Fix-abnomal-formatting-of-authentication-header-line.patch
-Patch2:		0001-Fix-multi-line-pam-text-info.patch
-Patch3:		0002-Refactor-send_to_helper-usage.patch
-Patch4:		0003-polkitagent-Fix-access-after-dereference-on-hashtabl.patch
-Patch5:		0004-Fix-a-memory-leak-of-PolkitAgentListener-s-Server-ob.patch
-Patch6:		0005-Remove-polkitbackendconfigsource.-ch.patch
-Patch7:		0006-polkit-Add-g_autoptr-support-for-GObject-derived-pol.patch
-Patch8:		0007-data-Set-GIO_USE_VFS-local-in-the-environment.patch
-Patch9:		0008-polkitpermission-Fix-a-memory-leak-on-authority-chan.patch
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
 BuildRequires:	gtk-doc
@@ -97,7 +87,7 @@ Development files for PolicyKit.
 
 %prep
 %setup -q
-%apply_patches
+%autopatch -p1
 
 %build
 autoreconf -fiv
@@ -109,10 +99,10 @@ autoreconf -fiv
 	--enable-introspection \
 	--enable-libsystemd-login=yes
 
-%make LIBS="-lgmodule-2.0"
+%make_build LIBS="-lgmodule-2.0"
 
 %install
-%makeinstall_std
+%make_install
 # (cg) Make the rules dir (this is where other packages should ship their rules)
 mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 

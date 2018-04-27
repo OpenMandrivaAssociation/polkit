@@ -23,7 +23,7 @@ BuildRequires:	intltool
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
-BuildRequires:	pkgconfig(mozjs185)
+BuildRequires:	pkgconfig(mozjs-52)
 BuildRequires:	pkgconfig(libsystemd)
 # (cg) Only needed due to patches+autoconf
 BuildRequires:	gettext-devel

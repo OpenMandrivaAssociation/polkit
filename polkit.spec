@@ -159,3 +159,5 @@ mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 %{_libdir}/pkgconfig/*.pc
 %{_datadir}/gir-1.0/*.gir
 %{_datadir}/gtk-doc/html/*
+%{_datadir}/gettext/its/polkit.its
+%{_datadir}/gettext/its/polkit.loc

@@ -1,0 +1,87 @@
+From 373705b35e7f6c7dc83de5e0a3ce11ecd15d0409 Mon Sep 17 00:00:00 2001
+From: Ray Strode <rstrode@redhat.com>
+Date: Tue, 3 Apr 2018 15:26:37 -0400
+Subject: [PATCH] jsauthority: pass "%s" format string to remaining report
+ function
+
+commit 00adeee1b62 attempted to add a "%s" format string to the
+two JS_Report invocations that needed it, but somehow only got
+one them.
+
+This commit gets the other one.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=105865
+---
+ src/polkitbackend/polkitbackendjsauthority.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/polkitbackend/polkitbackendjsauthority.cpp b/src/polkitbackend/polkitbackendjsauthority.cpp
+index 9746c47..517f3c6 100644
+--- a/src/polkitbackend/polkitbackendjsauthority.cpp
++++ b/src/polkitbackend/polkitbackendjsauthority.cpp
+@@ -1265,61 +1265,61 @@ polkit_backend_js_authority_check_authorization_sync (PolkitBackendInteractiveAu
+     }
+ 
+   good = TRUE;
+ 
+  out:
+   if (!good)
+     ret = POLKIT_IMPLICIT_AUTHORIZATION_NOT_AUTHORIZED;
+   g_free (ret_str);
+ 
+   JS_MaybeGC (authority->priv->cx);
+ 
+   JS_EndRequest (authority->priv->cx);
+ 
+   return ret;
+ }
+ 
+ /* ---------------------------------------------------------------------------------------------------- */
+ 
+ static bool
+ js_polkit_log (JSContext  *cx,
+                unsigned    argc,
+                JS::Value      *vp)
+ {
+   /* PolkitBackendJsAuthority *authority = POLKIT_BACKEND_JS_AUTHORITY (JS_GetContextPrivate (cx)); */
+   bool ret = false;
+   char *s;
+ 
+   JS::CallArgs args = JS::CallArgsFromVp (argc, vp);
+ 
+   s = JS_EncodeString (cx, args[0].toString ());
+-  JS_ReportWarningUTF8 (cx, s);
++  JS_ReportWarningUTF8 (cx, "%s", s);
+   JS_free (cx, s);
+ 
+   ret = true;
+ 
+   args.rval ().setUndefined (); /* return undefined */
+ 
+   return ret;
+ }
+ 
+ /* ---------------------------------------------------------------------------------------------------- */
+ 
+ static const gchar *
+ get_signal_name (gint signal_number)
+ {
+   switch (signal_number)
+     {
+ #define _HANDLE_SIG(sig) case sig: return #sig;
+     _HANDLE_SIG (SIGHUP);
+     _HANDLE_SIG (SIGINT);
+     _HANDLE_SIG (SIGQUIT);
+     _HANDLE_SIG (SIGILL);
+     _HANDLE_SIG (SIGABRT);
+     _HANDLE_SIG (SIGFPE);
+     _HANDLE_SIG (SIGKILL);
+     _HANDLE_SIG (SIGSEGV);
+     _HANDLE_SIG (SIGPIPE);
+     _HANDLE_SIG (SIGALRM);
+     _HANDLE_SIG (SIGTERM);
+     _HANDLE_SIG (SIGUSR1);
+     _HANDLE_SIG (SIGUSR2);
+-- 
+2.16.2
+

@@ -16,7 +16,6 @@ Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 Patch0:		polkit-0.113-ABF-workaround.patch
-Patch1:		0001-jsauthority-pass-s-format-string-to-remaining-report.patch
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
 BuildRequires:	gtk-doc

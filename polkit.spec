@@ -10,12 +10,16 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.115
-Release:	1
+Release:	2
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 Patch0:		polkit-0.113-ABF-workaround.patch
+Patch1:		polkitagentlistener-freed-server-returned.patch
+Patch2:		pkttyagent-rescue-target-error-msg.patch
+Patch3:		bus-conn-msg-ssh.patch
+Patch4:		spawning-zombie-processes.patch
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
 BuildRequires:	gtk-doc
@@ -87,8 +91,7 @@ Requires:	%{giragent} = %{version}-%{release}
 Development files for PolicyKit.
 
 %prep
-%setup -q
-%autopatch -p1
+%autosetup -p1
 
 %build
 autoreconf -fiv

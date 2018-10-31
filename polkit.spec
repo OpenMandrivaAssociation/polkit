@@ -125,7 +125,7 @@ mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 %{_bindir}/pkcheck
 %{_bindir}/pkttyagent
 %{_bindir}/pk-example-frobnicate
-%{_systemunitdir}/polkit.service
+%{_unitdir}/polkit.service
 %dir %{_prefix}/lib/polkit-1
 %{_prefix}/lib/polkit-1/polkitd
 %{_datadir}/dbus-1/system-services/*

@@ -10,7 +10,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.115
-Release:	3
+Release:	4
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -20,6 +20,7 @@ Patch1:		polkitagentlistener-freed-server-returned.patch
 Patch2:		pkttyagent-rescue-target-error-msg.patch
 Patch3:		bus-conn-msg-ssh.patch
 Patch4:		spawning-zombie-processes.patch
+Patch5:		0000-Allow-negative-uids-gids-in-PolkitUnixUser-and-Group.patch
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
 BuildRequires:	gtk-doc

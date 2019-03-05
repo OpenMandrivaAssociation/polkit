@@ -7,10 +7,13 @@
 %define giragent %mklibname polkitagent-gir %{girmaj}
 %define devname %mklibname -d %{name} %{api}
 
+# (tpg) optimize a bit
+%global optflags %{optflags} -O3
+
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.115
-Release:	4
+Release:	5
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -23,6 +26,7 @@ Patch4:		spawning-zombie-processes.patch
 Patch5:		0000-Allow-negative-uids-gids-in-PolkitUnixUser-and-Group.patch
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
+Patch21:	https://raw.githubusercontent.com/clearlinux-pkgs/polkit/master/more-gc.patch
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	pam-devel

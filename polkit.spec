@@ -19,11 +19,6 @@ Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 Patch0:		polkit-0.113-ABF-workaround.patch
-Patch1:		polkitagentlistener-freed-server-returned.patch
-Patch2:		pkttyagent-rescue-target-error-msg.patch
-Patch3:		bus-conn-msg-ssh.patch
-Patch4:		spawning-zombie-processes.patch
-Patch5:		0000-Allow-negative-uids-gids-in-PolkitUnixUser-and-Group.patch
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
 Patch21:	https://raw.githubusercontent.com/clearlinux-pkgs/polkit/master/more-gc.patch

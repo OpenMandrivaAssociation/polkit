@@ -1,0 +1,25 @@
+From 0e1d33b473748a63ce76133483ceda3397302857 Mon Sep 17 00:00:00 2001
+From: Jan Rybar <jrybar@redhat.com>
+Date: Mon, 27 Jan 2020 18:07:57 +0000
+Subject: [PATCH 4/5] Freeing uninitialized memory
+
+---
+ src/polkitagent/polkitagenthelper-bsdauth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/polkitagent/polkitagenthelper-bsdauth.c b/src/polkitagent/polkitagenthelper-bsdauth.c
+index b410b45..b105180 100644
+--- a/src/polkitagent/polkitagenthelper-bsdauth.c
++++ b/src/polkitagent/polkitagenthelper-bsdauth.c
+@@ -45,7 +45,7 @@ main (int argc, char *argv[])
+ {
+   struct passwd *pw;
+   const char *user_to_auth;
+-  char *cookie;
++  char *cookie = NULL;
+ 
+   /* clear the entire environment to avoid attacks with
+      libraries honoring environment variables */
+-- 
+2.25.0
+

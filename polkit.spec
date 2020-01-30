@@ -13,7 +13,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.116
-Release:	1
+Release:	2
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -22,6 +22,12 @@ Patch0:		polkit-0.113-ABF-workaround.patch
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
 Patch21:	https://raw.githubusercontent.com/clearlinux-pkgs/polkit/master/more-gc.patch
+# (tpg) upstream patches
+Patch100:	0000-pkttyagent-process-stopped-by-SIGTTOU-if-run-in-back.patch
+Patch101:	0003-jsauthority-Fix-two-minor-memory-leaks.patch
+Patch102:	0004-Freeing-uninitialized-memory.patch
+Patch103:	0005-Restoring-terminal-setting-erases-unread-input.patch
+
 BuildRequires:	gtk-doc
 BuildRequires:	intltool
 BuildRequires:	pam-devel

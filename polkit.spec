@@ -7,8 +7,8 @@
 %define giragent %mklibname polkitagent-gir %{girmaj}
 %define devname %mklibname -d %{name} %{api}
 
-# (tpg) optimize a bit
-%global optflags %{optflags} -O3
+# (tpg) reduce size a bit
+%global optflags %{optflags} -Oz
 
 Summary:	PolicyKit Authorization Framework
 Name:		polkit

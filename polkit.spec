@@ -12,7 +12,7 @@
 
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
-Version:	0.117
+Version:	0.118
 Release:	1
 License:	LGPLv2+
 Group:		System/Libraries
@@ -28,7 +28,7 @@ BuildRequires:	intltool
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
-BuildRequires:	pkgconfig(mozjs-68)
+BuildRequires:	pkgconfig(mozjs-78)
 BuildRequires:	pkgconfig(libsystemd)
 # (cg) Only needed due to patches+autoconf
 BuildRequires:	gettext-devel

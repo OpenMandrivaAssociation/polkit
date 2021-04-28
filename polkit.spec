@@ -13,12 +13,11 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.118
-Release:	3
+Release:	2
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
-Source1:	%{name}.sysusers
 Patch0:		polkit-0.113-ABF-workaround.patch
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
@@ -34,12 +33,13 @@ BuildRequires:	pkgconfig(libsystemd)
 # (cg) Only needed due to patches+autoconf
 BuildRequires:	gettext-devel
 Requires:	dbus
+BuildRequires:	rpm-helper
+Requires(pre,post,preun):	rpm-helper
 # polkit saw some API/ABI changes from 0.96 to 0.97 so require a
 # sufficiently new polkit-gnome package
 Conflicts:	polkit-gnome < 0.97
 %rename		PolicyKit
 %rename		polkit-desktop-policy
-%systemd_ordering
 
 %description
 PolicyKit is a toolkit for defining and handling authorizations.
@@ -111,26 +111,17 @@ autoreconf -fiv
 # (cg) Make the rules dir (this is where other packages should ship their rules)
 mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 
-install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
-
 %find_lang polkit-1 polkit-1.lang
 
-%post
-# The implied (systemctl preset) will fail and complain, but the macro hides
-# and ignores the fact.  This is in fact what we want, polkit.service does not
-# have an [Install] section and it is always started on demand.
-%systemd_post polkit.service
-
-%preun
-%systemd_preun polkit.service
+%pre
+%_pre_useradd polkitd %{_prefix}/lib/polkit-1 /sbin/nologin
 
 %postun
-%systemd_postun_with_restart polkit.service
+%_postun_userdel polkitd
 
 %files -f polkit-1.lang
 %{_sysconfdir}/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
 %{_sysconfdir}/pam.d/polkit-1
-%{_sysusersdir}/%{name}.conf
 %{_bindir}/pkaction
 %{_bindir}/pkcheck
 %{_bindir}/pkttyagent
@@ -146,6 +137,7 @@ install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
 %attr(700,polkitd,root) %dir %{_datadir}/polkit-1/rules.d
 %attr(700,polkitd,root) %{_sysconfdir}/polkit-1/rules.d
 %dir %{_sysconfdir}/polkit-1
+#%{_sysconfdir}/polkit-1/rules.d/50-default.rules
 %{_mandir}/man1/*
 %{_mandir}/man8/*
 

@@ -1,1 +1,0 @@
-u polkitd 110 "User for polkitd" /usr/lib/polkit-1 /sbin/nologin

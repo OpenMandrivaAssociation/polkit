@@ -13,7 +13,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.118
-Release:	5
+Release:	6
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -39,6 +39,9 @@ Requires:	dbus
 Conflicts:	polkit-gnome < 0.97
 %rename		PolicyKit
 %rename		polkit-desktop-policy
+Requires(pre):	glibc
+Requires(pre):	shadow
+Requires(pre):	passwd
 %systemd_ordering
 
 %description
@@ -114,6 +117,11 @@ mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
 
 %find_lang polkit-1 polkit-1.lang
+
+%pre
+getent group polkitd >/dev/null || groupadd -r polkitd
+getent passwd polkitd >/dev/null || useradd -r -g polkitd -d / -s /sbin/nologin -c "User for polkitd" polkitd
+exit 0
 
 %post
 # The implied (systemctl preset) will fail and complain, but the macro hides

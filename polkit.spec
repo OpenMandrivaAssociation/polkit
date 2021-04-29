@@ -13,7 +13,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.118
-Release:	6
+Release:	7
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -120,7 +120,7 @@ install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
 
 %pre
 getent group polkitd >/dev/null || groupadd -r polkitd
-getent passwd polkitd >/dev/null || useradd -r -g polkitd -d / -s /sbin/nologin -c "User for polkitd" polkitd
+getent passwd polkitd >/dev/null || useradd -r -g polkitd -d %{_prefix}/lib/polkit-1 -s /sbin/nologin -c "User for polkitd" polkitd
 exit 0
 
 %post

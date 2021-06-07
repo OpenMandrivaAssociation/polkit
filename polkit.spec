@@ -12,8 +12,8 @@
 
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
-Version:	0.118
-Release:	7
+Version:	0.119
+Release:	1
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -24,7 +24,7 @@ Patch0:		polkit-0.113-ABF-workaround.patch
 Patch20:	x11vars.patch
 Patch21:	https://raw.githubusercontent.com/clearlinux-pkgs/polkit/master/more-gc.patch
 
-BuildRequires:	gtk-doc
+BuildRequires:	meson
 BuildRequires:	intltool
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig(expat)
@@ -98,19 +98,16 @@ Development files for PolicyKit.
 %autosetup -p1
 
 %build
-autoreconf -fiv
+%meson \
+    -Dsession_tracking=libsystemd-login \
+    -Dsystemdsystemunitdir=%{_unitdir} \
+    -Dpolkitd_user=polkitd \
+    -Dauthfw=pam
 
-%configure \
-	--enable-gtk-doc \
-	--disable-static \
-	--libexecdir=%{_libexecdir}/polkit-1 \
-	--enable-introspection \
-	--enable-libsystemd-login=yes
-
-%make_build LIBS="-lgmodule-2.0"
+%meson_build
 
 %install
-%make_install
+%meson_install
 # (cg) Make the rules dir (this is where other packages should ship their rules)
 mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 

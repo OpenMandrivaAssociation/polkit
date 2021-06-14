@@ -97,6 +97,9 @@ Development files for PolicyKit.
 %autosetup -p1
 
 %build
+# (tpg) this script is bogus
+sed -i -e 's,meson_post_install.py,/bin/true,g' meson.build
+
 %meson \
     -Dsession_tracking=libsystemd-login \
     -Dsystemdsystemunitdir=%{_unitdir} \
@@ -132,30 +135,26 @@ exit 0
 %systemd_postun_with_restart polkit.service
 
 %files -f polkit-1.lang
-%{_sysconfdir}/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
 %{_sysconfdir}/pam.d/polkit-1
 %{_sysusersdir}/%{name}.conf
 %{_bindir}/pkaction
 %{_bindir}/pkcheck
 %{_bindir}/pkttyagent
-%{_bindir}/pk-example-frobnicate
 %{_unitdir}/polkit.service
-%dir %{_prefix}/lib/polkit-1
-%{_prefix}/lib/polkit-1/polkitd
+%dir %{_libdir}/polkit-1
+%{_libdir}/polkit-1/polkitd
+%{_datadir}/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
 %{_datadir}/dbus-1/system-services/*
 %dir %{_datadir}/polkit-1/
 %dir %{_datadir}/polkit-1/actions
 %{_datadir}/polkit-1/actions/org.freedesktop.policykit.policy
-%{_datadir}/polkit-1/actions/org.freedesktop.policykit.examples.pkexec.policy
 %attr(700,polkitd,root) %dir %{_datadir}/polkit-1/rules.d
 %attr(700,polkitd,root) %{_sysconfdir}/polkit-1/rules.d
 %dir %{_sysconfdir}/polkit-1
-%{_mandir}/man1/*
-%{_mandir}/man8/*
 
 # see upstream docs for why these permissions are necessary
 %attr(4755,root,root) %{_bindir}/pkexec
-%attr(4755,root,root) %{_prefix}/lib/polkit-1/polkit-agent-helper-1
+%attr(4755,root,root) %{_libdir}/polkit-1/polkit-agent-helper-1
 
 %files -n %{libagent}
 %{_libdir}/libpolkit-agent-%{api}.so.%{major}*
@@ -174,6 +173,5 @@ exit 0
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*.pc
 %{_datadir}/gir-1.0/*.gir
-%{_datadir}/gtk-doc/html/*
 %{_datadir}/gettext/its/polkit.its
 %{_datadir}/gettext/its/polkit.loc

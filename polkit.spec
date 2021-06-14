@@ -31,8 +31,7 @@ BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(mozjs-78)
 BuildRequires:	pkgconfig(libsystemd)
-# (cg) Only needed due to patches+autoconf
-BuildRequires:	gettext-devel
+BuildRequires:	pkgconfig(dbus-1)
 Requires:	dbus
 # polkit saw some API/ABI changes from 0.96 to 0.97 so require a
 # sufficiently new polkit-gnome package

@@ -13,7 +13,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.119
-Release:	1
+Release:	2
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -38,9 +38,7 @@ Requires:	dbus
 Conflicts:	polkit-gnome < 0.97
 %rename		PolicyKit
 %rename		polkit-desktop-policy
-Requires(pre):	glibc
-Requires(pre):	shadow
-Requires(pre):	passwd
+Requires(pre):	systemd
 %systemd_ordering
 
 %description
@@ -114,13 +112,12 @@ sed -i -e 's,meson_post_install.py,/bin/true,g' meson.build
 mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 
 install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
+sed -i -e 's,/usr/lib,%{_libdir},g' %{buildroot}%{_sysusersdir}/%{name}.conf
 
 %find_lang polkit-1 polkit-1.lang
 
 %pre
-getent group polkitd >/dev/null || groupadd -r polkitd
-getent passwd polkitd >/dev/null || useradd -r -g polkitd -d %{_prefix}/lib/polkit-1 -s /sbin/nologin -c "User for polkitd" polkitd
-exit 0
+%sysusers_create_package %{name}.conf %{SOURCE1}
 
 %post
 # The implied (systemctl preset) will fail and complain, but the macro hides

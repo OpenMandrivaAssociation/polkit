@@ -1,2 +1,2 @@
-u polkitd 110 "User for polkitd" /usr/lib/polkit-1 /sbin/nologin
+u polkitd 110 "User for polkitd" @LIBDIR@/polkit-1 /sbin/nologin
 m polkitd proc

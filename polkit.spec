@@ -13,7 +13,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.119
-Release:	2
+Release:	3
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -112,12 +112,12 @@ sed -i -e 's,meson_post_install.py,/bin/true,g' meson.build
 mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 
 install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
-sed -i -e 's,/usr/lib,%{_libdir},g' %{buildroot}%{_sysusersdir}/%{name}.conf
+sed -i -e 's,@LIBDIR@,%{_libdir},g' %{buildroot}%{_sysusersdir}/%{name}.conf
 
 %find_lang polkit-1 polkit-1.lang
 
 %pre
-%sysusers_create_package %{name}.conf %{SOURCE1}
+%sysusers_create_package %{name} %{SOURCE1}
 
 %post
 # The implied (systemctl preset) will fail and complain, but the macro hides

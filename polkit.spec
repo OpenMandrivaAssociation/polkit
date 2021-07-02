@@ -13,13 +13,14 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.119
-Release:	3
+Release:	4
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 Source1:	%{name}.sysusers
 Patch0:		polkit-0.113-ABF-workaround.patch
+Patch1:		polkit-0.119-fix-polkit-agent-helper-1-search-path.patch
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
 Patch21:	https://raw.githubusercontent.com/clearlinux-pkgs/polkit/master/more-gc.patch

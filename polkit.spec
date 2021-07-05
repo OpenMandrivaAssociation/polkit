@@ -13,7 +13,7 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.119
-Release:	5
+Release:	6
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
@@ -133,7 +133,8 @@ sed -i -e 's,@LIBDIR@,%{_libdir},g' %{buildroot}%{_sysusersdir}/%{name}.conf
 %systemd_postun_with_restart polkit.service
 
 # (tpg) update /etc/passwd for new libdir for polkitd user
-%triggerpostun -- %{name} < 0.119-5
+%triggerpostun -- %{name} < 0.119-6
+systemctl daemon-reload
 systemctl stop polkit.service
 usermod -d %{_libdir}/polkit-1 polkitd
 systemctl start polkit.service

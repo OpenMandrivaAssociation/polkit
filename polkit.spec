@@ -145,7 +145,7 @@ systemctl start polkit.service
 %{_bindir}/pkcheck
 %{_bindir}/pkttyagent
 %{_unitdir}/polkit.service
-%dir %{_preix}/lib/polkit-1
+%dir %{_prefix}/lib/polkit-1
 %{_prefix}/lib/polkit-1/polkitd
 %{_datadir}/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
 %{_datadir}/dbus-1/system-services/*

@@ -8,27 +8,6 @@ Subject: [PATCH] Improve meson_post_install script
  meson_post_install.py | 58 +++++++++++++++++++++++++++++++++++--------
  2 files changed, 49 insertions(+), 12 deletions(-)
 
-diff --git a/.gitlab-ci.yml b/.gitlab-ci.yml
-index 8ac3e9f..6d0abb4 100644
---- a/.gitlab-ci.yml
-+++ b/.gitlab-ci.yml
-@@ -26,8 +26,6 @@ build_stable:
-   before_script:
-     - dnf upgrade -y --nogpgcheck fedora-release fedora-repos*
-     - dnf update -y && dnf install -y $DEPENDENCIES
--    - getent group polkitd >/dev/null || groupadd -r polkitd
--    - getent passwd polkitd >/dev/null || useradd -r -g polkitd -d / -s /sbin/nologin -c "User for polkitd" polkitd
- 
-   script:
-     - meson setup 
-@@ -43,6 +41,7 @@ build_stable:
-     - meson compile -C builddir
-     - meson test    -C builddir
-     - meson install -C builddir
-+    - DESTDIR=$(pwd)/DESTDIR meson install -C builddir
-   artifacts:
-     name: 'test logs'
-     when: 'always'
 diff --git a/meson_post_install.py b/meson_post_install.py
 index 0a0fccf..0ab7469 100644
 --- a/meson_post_install.py

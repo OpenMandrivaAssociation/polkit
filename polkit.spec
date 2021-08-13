@@ -13,17 +13,20 @@
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
 Version:	0.119
-Release:	6
+Release:	7
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
 Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
 Source1:	%{name}.sysusers
 Patch0:		polkit-0.113-ABF-workaround.patch
-Patch1:		polkit-0.119-fix-polkit-agent-helper-1-search-path.patch
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
 Patch21:	https://raw.githubusercontent.com/clearlinux-pkgs/polkit/master/more-gc.patch
+
+# (tpg) add patches from upstream
+Patch100:	0000-Improve-meson_post_install-script.patch
+Patch101:	0000-build-Make-the-directory-for-helper-executables-cons.patch
 
 BuildRequires:	meson
 BuildRequires:	intltool
@@ -96,9 +99,6 @@ Development files for PolicyKit.
 %autosetup -p1
 
 %build
-# (tpg) this script is bogus
-sed -i -e 's,meson_post_install.py,/bin/true,g' meson.build
-
 %meson \
     -Dsession_tracking=libsystemd-login \
     -Dsystemdsystemunitdir=%{_unitdir} \
@@ -113,7 +113,6 @@ sed -i -e 's,meson_post_install.py,/bin/true,g' meson.build
 mkdir -p %{buildroot}%{_datadir}/polkit-1/rules.d
 
 install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysusersdir}/%{name}.conf
-sed -i -e 's,@LIBDIR@,%{_libdir},g' %{buildroot}%{_sysusersdir}/%{name}.conf
 
 %find_lang polkit-1 polkit-1.lang
 
@@ -133,10 +132,10 @@ sed -i -e 's,@LIBDIR@,%{_libdir},g' %{buildroot}%{_sysusersdir}/%{name}.conf
 %systemd_postun_with_restart polkit.service
 
 # (tpg) update /etc/passwd for new libdir for polkitd user
-%triggerpostun -- %{name} < 0.119-6
+%triggerpostun -- %{name} < 0.119-7
 systemctl daemon-reload
 systemctl stop polkit.service
-usermod -d %{_libdir}/polkit-1 polkitd
+usermod -d %{_prefix}/lib/polkit-1 polkitd
 systemctl start polkit.service
 
 %files -f polkit-1.lang
@@ -146,8 +145,8 @@ systemctl start polkit.service
 %{_bindir}/pkcheck
 %{_bindir}/pkttyagent
 %{_unitdir}/polkit.service
-%dir %{_libdir}/polkit-1
-%{_libdir}/polkit-1/polkitd
+%dir %{_preix}/lib/polkit-1
+%{_prefix}/lib/polkit-1/polkitd
 %{_datadir}/dbus-1/system.d/org.freedesktop.PolicyKit1.conf
 %{_datadir}/dbus-1/system-services/*
 %dir %{_datadir}/polkit-1/
@@ -159,7 +158,7 @@ systemctl start polkit.service
 
 # see upstream docs for why these permissions are necessary
 %attr(4755,root,root) %{_bindir}/pkexec
-%attr(4755,root,root) %{_libdir}/polkit-1/polkit-agent-helper-1
+%attr(4755,root,root) %{_prefix}/lib/polkit-1/polkit-agent-helper-1
 
 %files -n %{libagent}
 %{_libdir}/libpolkit-agent-%{api}.so.%{major}*

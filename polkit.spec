@@ -8,25 +8,22 @@
 %define devname %mklibname -d %{name} %{api}
 
 # (tpg) reduce size a bit
-%global optflags %{optflags} -Oz
+%global optflags %{optflags} -Oz -fPIC
+%global build_ldflags %{build_ldflags} -pie -Wl,-z,now -Wl,-z,relro
 
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
-Version:	0.119
-Release:	7
+Version:	0.120
+Release:	1
 License:	LGPLv2+
 Group:		System/Libraries
-Url:		http://www.freedesktop.org/wiki/Software/PolicyKit
-Source0:	http://www.freedesktop.org/software/polkit/releases/%{name}-%{version}.tar.gz
+Url:		https://gitlab.freedesktop.org/polkit/polkit/
+Source0:	https://gitlab.freedesktop.org/polkit/polkit/-/archive/%{version}/%{name}-%{version}.tar.bz2
 Source1:	%{name}.sysusers
 Patch0:		polkit-0.113-ABF-workaround.patch
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
 Patch21:	https://raw.githubusercontent.com/clearlinux-pkgs/polkit/master/more-gc.patch
-
-# (tpg) add patches from upstream
-Patch100:	0000-Improve-meson_post_install-script.patch
-Patch101:	0000-build-Make-the-directory-for-helper-executables-cons.patch
 
 BuildRequires:	meson
 BuildRequires:	intltool
@@ -35,7 +32,6 @@ BuildRequires:	pkgconfig(expat)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 BuildRequires:	pkgconfig(mozjs-78)
 BuildRequires:	pkgconfig(libsystemd)
-BuildRequires:	pkgconfig(dbus-1)
 Requires:	dbus
 # polkit saw some API/ABI changes from 0.96 to 0.97 so require a
 # sufficiently new polkit-gnome package

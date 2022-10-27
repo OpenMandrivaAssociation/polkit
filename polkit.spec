@@ -13,7 +13,7 @@
 
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
-Version:	121
+Version:	122
 Release:	1
 License:	LGPLv2+
 Group:		System/Libraries
@@ -149,7 +149,8 @@ systemctl start polkit.service
 %dir %{_datadir}/polkit-1/actions
 %{_datadir}/polkit-1/actions/org.freedesktop.policykit.policy
 %attr(700,polkitd,root) %dir %{_datadir}/polkit-1/rules.d
-%attr(700,polkitd,root) %{_sysconfdir}/polkit-1/rules.d
+%attr(700,polkitd,root) %dir %{_sysconfdir}/polkit-1/rules.d
+%{_datadir}/polkit-1/rules.d/50-default.rules
 %dir %{_sysconfdir}/polkit-1
 
 # see upstream docs for why these permissions are necessary

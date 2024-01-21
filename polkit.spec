@@ -7,6 +7,8 @@
 %define giragent %mklibname polkitagent-gir %{girmaj}
 %define devname %mklibname -d %{name} %{api}
 
+%bcond_without gir
+
 # (tpg) reduce size a bit
 %global optflags %{optflags} -Oz -fPIC
 %global build_ldflags %{build_ldflags} -pie -Wl,-z,now -Wl,-z,relro
@@ -27,7 +29,9 @@ BuildRequires:	meson
 BuildRequires:	intltool
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig(expat)
+%if %{with gir}
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
+%endif
 BuildRequires:	pkgconfig(libsystemd)
 BuildRequires:	pkgconfig(duktape)
 Requires:	dbus
@@ -99,6 +103,9 @@ Development files for PolicyKit.
     -Dpolkitd_user=polkitd \
     -Djs_engine=duktape \
     -Dauthfw=pam \
+%if %{without gir}
+    -Dintrospection=false \
+%endif
     -Dpam_module_dir="%{_libdir}/security"
 
 %meson_build
@@ -163,17 +170,21 @@ systemctl start polkit.service
 %files -n %{libgobject}
 %{_libdir}/libpolkit-gobject-%{api}.so.%{major}*
 
+%if %{with gir}
 %files -n %{girname}
 %{_libdir}/girepository-1.0/Polkit-%{girmaj}.typelib
 
 %files -n %{giragent}
 %{_libdir}/girepository-1.0/PolkitAgent-%{girmaj}.typelib
+%endif
 
 %files -n %{devname}
 %{_includedir}/*
 %{_libdir}/lib*.so
 %{_libdir}/pkgconfig/*.pc
+%if %{with gir}
 %{_datadir}/gir-1.0/*.gir
+%endif
 %{_datadir}/gettext/its/polkit.its
 %{_datadir}/gettext/its/polkit.loc
 %{_datadir}/polkit-1/policyconfig-1.dtd

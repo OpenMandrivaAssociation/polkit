@@ -87,8 +87,10 @@ Group:		Development/C
 Provides:	polkit-%{api}-devel = %{version}-%{release}
 Requires:	%{libagent} = %{version}-%{release}
 Requires:	%{libgobject} = %{version}-%{release}
+%if %{with gir}
 Requires:	%{girname} = %{version}-%{release}
 Requires:	%{giragent} = %{version}-%{release}
+%endif
 
 %description -n %{devname}
 Development files for PolicyKit.

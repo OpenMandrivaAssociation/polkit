@@ -15,12 +15,12 @@
 
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
-Version:	123
+Version:	124
 Release:	1
 License:	LGPLv2+
 Group:		System/Libraries
 Url:		https://gitlab.freedesktop.org/polkit/polkit/
-Source0:	https://gitlab.freedesktop.org/polkit/polkit/-/archive/%{version}/%{name}-%{version}.tar.bz2
+Source0:	https://github.com/polkit-org/polkit/archive/refs/tags/%{version}/%{name}-%{version}.tar.gz
 Source1:	%{name}.sysusers
 # (tpg) export environemt vars
 Patch20:	x11vars.patch

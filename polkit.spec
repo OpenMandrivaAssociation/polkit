@@ -147,8 +147,9 @@ usermod -d %{_prefix}/lib/polkit-1 polkitd
 systemctl start polkit.service
 
 %files -f polkit-1.lang
-#{_sysconfdir}/pam.d/polkit-1
 %{_sysusersdir}/%{name}.conf
+%{_prefix}/lib/pam.d/polkit-1
+%{_prefix}/lib/tmpfiles.d/polkit-tmpfiles.conf
 %{_bindir}/pkaction
 %{_bindir}/pkcheck
 %{_bindir}/pkttyagent

@@ -15,12 +15,12 @@
 
 Summary:	PolicyKit Authorization Framework
 Name:		polkit
-Version:	123
+Version:	125
 Release:	1
 License:	LGPLv2+
 Group:		System/Libraries
-Url:		https://gitlab.freedesktop.org/polkit/polkit/
-Source0:	https://gitlab.freedesktop.org/polkit/polkit/-/archive/%{version}/%{name}-%{version}.tar.bz2
+Url:		https://github.com/polkit-org/polkit/
+Source0:	https://github.com/polkit-org/polkit/archive/%{version}/%{name}-%{version}.tar.gz
 Source1:	%{name}.sysusers
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
@@ -29,6 +29,7 @@ BuildRequires:	meson
 BuildRequires:	intltool
 BuildRequires:	pam-devel
 BuildRequires:	pkgconfig(expat)
+BuildRequires:	pkgconfig(glib-2.0)
 %if %{with gir}
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 %endif
@@ -100,13 +101,15 @@ Development files for PolicyKit.
 
 %build
 %meson \
-    -Dsession_tracking=libsystemd-login \
+    -Dsession_tracking=logind \
     -Dsystemdsystemunitdir=%{_unitdir} \
     -Dpolkitd_user=polkitd \
     -Djs_engine=duktape \
     -Dauthfw=pam \
 %if %{without gir}
     -Dintrospection=false \
+%else
+    -Dintrospection=true \
 %endif
     -Dpam_module_dir="%{_libdir}/security"
 

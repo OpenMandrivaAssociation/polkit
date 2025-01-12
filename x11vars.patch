@@ -1,7 +1,7 @@
 diff -Naur polkit-0.119/src/programs/pkexec.c polkit-0.119.tpg/src/programs/pkexec.c
 --- polkit-0.119/src/programs/pkexec.c	2018-05-31 11:52:53.000000000 +0000
 +++ polkit-0.119.tpg/src/programs/pkexec.c	2021-08-13 12:50:05.184589741 +0000
-@@ -481,6 +481,19 @@
+@@ -481,6 +481,20 @@
       */
      "DISPLAY",
      "XAUTHORITY",
@@ -10,6 +10,7 @@ diff -Naur polkit-0.119/src/programs/pkexec.c polkit-0.119.tpg/src/programs/pkex
 +    "KDE_SESSION_VERSION",
 +    "GNOME_DESKTOP_SESSION_ID",
 +    "XDG_CURRENT_DESKTOP",
++    "XDG_RUNTIME_DIR",
 +    "XDG_SESSION_DESKTOP",
 +    "XDG_SESSION_TYPE",
 +    "QT_STYLE_OVERRIDE",

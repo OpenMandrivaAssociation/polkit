@@ -1,7 +1,16 @@
-diff -Naur polkit-0.119/src/programs/pkexec.c polkit-0.119.tpg/src/programs/pkexec.c
---- polkit-0.119/src/programs/pkexec.c	2018-05-31 11:52:53.000000000 +0000
-+++ polkit-0.119.tpg/src/programs/pkexec.c	2021-08-13 12:50:05.184589741 +0000
-@@ -481,6 +481,20 @@
+diff -up polkit-125/src/programs/pkexec.c.1~ polkit-125/src/programs/pkexec.c
+--- polkit-125/src/programs/pkexec.c.1~	2024-08-08 15:12:35.000000000 +0200
++++ polkit-125/src/programs/pkexec.c	2025-01-12 23:30:36.548013222 +0100
+@@ -412,7 +412,7 @@ validate_environment_variable (const gch
+           goto out;
+         }
+     }
+-  else if ((g_strcmp0 (key, "XAUTHORITY") != 0 && strstr (value, "/") != NULL) ||
++  else if ((g_strcmp0 (key, "XAUTHORITY") != 0 && g_strcmp0 (key, "XDG_RUNTIME_DIR") != 0 && strstr (value, "/") != NULL) ||
+            strstr (value, "%") != NULL ||
+            strstr (value, "..") != NULL)
+     {
+@@ -484,6 +484,23 @@ main (int argc, char *argv[])
       */
      "DISPLAY",
      "XAUTHORITY",
@@ -13,11 +22,14 @@ diff -Naur polkit-0.119/src/programs/pkexec.c polkit-0.119.tpg/src/programs/pkex
 +    "XDG_RUNTIME_DIR",
 +    "XDG_SESSION_DESKTOP",
 +    "XDG_SESSION_TYPE",
++    "QT_AUTO_SCREEN_SCALE_FACTOR",
++    "QT_SCREEN_SCALE_FACTORS",
 +    "QT_STYLE_OVERRIDE",
 +    "QT_XCB_FORCE_SOFTWARE_OPENGL",
 +    "QT_QPA_PLATFORM",
 +    "QT_QPA_PLATFORMTHEME",
 +    "QT_WAYLAND_FORCE_DPI",
++    "QT_WAYLAND_RECONNECT",
 +    "WAYLAND_DISPLAY",
      NULL
    };

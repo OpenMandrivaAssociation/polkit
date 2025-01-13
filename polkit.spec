@@ -25,10 +25,10 @@ Source1:	%{name}.sysusers
 # (tpg) export environemt vars
 Patch20:	x11vars.patch
 Patch21:	https://raw.githubusercontent.com/clearlinux-pkgs/polkit/master/more-gc.patch
-# We want to keep XDG_RUNTIME_DIR when becoming root -- root
+# We want to set XDG_RUNTIME_DIR when becoming root -- root
 # has sufficient access to the wayland sockets etc. inside
 # a user's XDG_RUNTIME_DIR to not break things
-Patch22:	keep-XDG_RUNTIME_DIR-for-root.patch
+Patch22:	set-XDG_RUNTIME_DIR-for-root.patch
 BuildRequires:	meson
 BuildRequires:	intltool
 BuildRequires:	pam-devel

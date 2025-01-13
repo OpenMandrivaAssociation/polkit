@@ -1,0 +1,32 @@
+diff -up polkit-125/src/programs/pkexec.c.3~ polkit-125/src/programs/pkexec.c
+--- polkit-125/src/programs/pkexec.c.3~	2025-01-13 00:28:30.034471845 +0000
++++ polkit-125/src/programs/pkexec.c	2025-01-13 00:39:06.706328815 +0000
+@@ -20,6 +20,7 @@
+  */
+ 
+ #include <string.h>
++#include <stdio.h>
+ #include <stdlib.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+@@ -207,8 +208,18 @@ open_session (const gchar *user_to_auth,
+ 	    {
+ 	      const char *eq = strchr (envitem, '=');
+ 	      g_assert (eq);
+-	      if (!xdg_runtime_dir_is_owned_by (eq + 1, target_uid))
+-		continue;
++        if (target_uid == 0) {
++          /* We want to share the original user's XDG_RUNTIME_DIR
++             so we can access wayland sockets and friends -- but
++             systemd injects /run/user/0.
++             Let's just set it to something reasonable instead.
++           */
++          char s[128];
++          sprintf(s, "XDG_RUNTIME_DIR=/run/user/%u", getuid());
++          putenv(s);
++          continue;
++        } else if (!xdg_runtime_dir_is_owned_by (eq + 1, target_uid))
++          continue;
+ 	    }
+ 
+ 	  putenv (envlist[n]);

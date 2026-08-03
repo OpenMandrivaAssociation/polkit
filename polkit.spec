@@ -169,6 +169,7 @@ systemctl start polkit.service
 %attr(700,polkitd,root) %dir %{_datadir}/polkit-1/rules.d
 %attr(700,polkitd,root) %dir %{_sysconfdir}/polkit-1/rules.d
 %{_datadir}/polkit-1/rules.d/50-default.rules
+%{_datadir}/polkit-1/polkitd.conf
 %dir %{_sysconfdir}/polkit-1
 
 # see upstream docs for why these permissions are necessary

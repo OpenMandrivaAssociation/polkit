@@ -38,7 +38,7 @@ BuildRequires:	pkgconfig(glib-2.0)
 BuildRequires:	pkgconfig(gobject-introspection-1.0)
 %endif
 BuildRequires:	pkgconfig(libsystemd)
-BuildRequires:	pkgconfig(duktape)
+#BuildRequires:	pkgconfig(duktape)
 Requires:	dbus
 # polkit saw some API/ABI changes from 0.96 to 0.97 so require a
 # sufficiently new polkit-gnome package
@@ -108,7 +108,6 @@ Development files for PolicyKit.
     -Dsession_tracking=logind \
     -Dsystemdsystemunitdir=%{_unitdir} \
     -Dpolkitd_user=polkitd \
-    -Djs_engine=duktape \
     -Dauthfw=pam \
 %if %{without gir}
     -Dintrospection=false \

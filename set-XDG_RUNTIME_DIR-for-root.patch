@@ -1,6 +1,5 @@
-diff -up polkit-125/src/programs/pkexec.c.3~ polkit-125/src/programs/pkexec.c
---- polkit-125/src/programs/pkexec.c.3~	2025-01-13 00:28:30.034471845 +0000
-+++ polkit-125/src/programs/pkexec.c	2025-01-13 00:39:06.706328815 +0000
+--- a/src/programs/pkexec.c	2026-10-15 17:22:30.000000000 +0200
++++ polkit-128/src/programs/pkexec.c	2026-10-16 19:13:12.831402928 +0200
 @@ -20,6 +20,7 @@
   */
  
@@ -9,7 +8,7 @@ diff -up polkit-125/src/programs/pkexec.c.3~ polkit-125/src/programs/pkexec.c
  #include <stdlib.h>
  #include <sys/types.h>
  #include <sys/stat.h>
-@@ -207,8 +208,18 @@ open_session (const gchar *user_to_auth,
+@@ -209,8 +210,18 @@ open_session (const gchar *user_to_auth,
  	    {
  	      const char *eq = strchr (envitem, '=');
  	      g_assert (eq);
